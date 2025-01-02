@@ -1,0 +1,27 @@
+/**
+ * Este CSS será global. Puedes sobrescribir las variables de Infima aquí.
+ */
+
+ :root {
+  --ifm-color-primary: #ff6f61; /* Color principal */
+  --ifm-color-primary-dark: #e65c50; /* Color principal oscuro */
+  --ifm-color-primary-darker: #cc5246; /* Color principal más oscuro */
+  --ifm-color-primary-darkest: #b3483c; /* Color principal más intenso */
+  --ifm-color-primary-light: #ff8577; /* Color principal claro */
+  --ifm-color-primary-lighter: #ff9b8d; /* Color principal más claro */
+  --ifm-color-primary-lightest: #ffb1a3; /* Color principal más suave */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* Paleta de colores para el modo oscuro */
+[data-theme='dark'] {
+  --ifm-color-primary: #ff6f61;
+  --ifm-color-primary-dark: #e65c50;
+  --ifm-color-primary-darker: #cc5246;
+  --ifm-color-primary-darkest: #b3483c;
+  --ifm-color-primary-light: #ff8577;
+  --ifm-color-primary-lighter: #ff9b8d;
+  --ifm-color-primary-lightest: #ffb1a3;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
