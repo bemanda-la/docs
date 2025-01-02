@@ -10,7 +10,7 @@ const config: Config = {
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://docs.bemanda.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/",
@@ -69,9 +69,9 @@ const config: Config = {
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "Manda Docs",
+      title: "Docs",
       logo: {
-        alt: "My Site Logo",
+        alt: "Manda Logo",
         src: "img/logo.svg",
       },
       items: [
