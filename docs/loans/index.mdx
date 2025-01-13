@@ -10,57 +10,120 @@ Esta guía detalla cómo consultar la información de un préstamo en el sistema
 
 - `loan_id` (path): Identificador único del préstamo en formato UUID.
 
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  {base_url}/v1/loans/{loan_id} \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require('node-fetch');
+
+async function getLoan(loanId, token) {
+  const response = await fetch(`${base_url}/v1/loans/${loanId}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching loan: ${response.statusText}`);
+  }
+
+  const loanData = await response.json();
+  console.log(loanData);
+}
+
+// Usage example
+const loanId = "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e";
+const token = "YOUR_ACCESS_TOKEN";
+getLoan(loanId, token).catch(console.error);
+```
+
 ## Respuesta
 
-La respuesta incluye la información básica del préstamo y sus relaciones relevantes, según lo definido en el modelo.
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
 
-### Ejemplo de Respuesta
+### Estructura de Respuesta
 
 ```json
 {
-  "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
-  "user_id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-  "application_id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-  "product_id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-  "currency_id": "USD",
-  "requested_amount": 10000.00,
-  "interest_rate": 5.00,
-  "penalty_rate": 2.00,
-  "bonus_amount": 500.00,
-  "bonus_percentage": 5.00,
-  "total_amount": 10500.00,
-  "paid_amount": 5000.00,
-  "balance": 5500.00,
-  "installment_quantity": 12,
-  "requested_date": "2025-01-01T10:00:00Z",
-  "approved_date": "2025-01-05T10:00:00Z",
-  "credited_date": "2025-01-06T10:00:00Z",
-  "last_payment_date": "2025-06-01T10:00:00Z",
-  "fully_paid_date": null,
-  "status": {
-    "id": "in_course",
-    "name": "In Course",
-    "description": "El préstamo está en curso."
-  },
-  "installments": [
-    {
-      "id": "04f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-      "due_date": "2025-02-01T10:00:00Z",
-      "due_amount": 1000.00,
-      "paid_amount": 500.00,
-      "balance": 500.00,
-      "number": 1,
-      "status": {
-        "id": "pending",
-        "name": "Pending",
-        "description": "La cuota está pendiente de pago."
+  "success": true,
+  "data": {
+    "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "user_id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "application_id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "product_id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "currency_id": "USD",
+    "requested_amount": 10000.00,
+    "interest_rate": 5.00,
+    "penalty_rate": 2.00,
+    "bonus_amount": 500.00,
+    "bonus_percentage": 5.00,
+    "total_amount": 10500.00,
+    "paid_amount": 5000.00,
+    "balance": 5500.00,
+    "installment_quantity": 12,
+    "requested_date": "2025-01-01T10:00:00Z",
+    "approved_date": "2025-01-05T10:00:00Z",
+    "credited_date": "2025-01-06T10:00:00Z",
+    "last_payment_date": "2025-06-01T10:00:00Z",
+    "fully_paid_date": null,
+    "status": {
+      "id": "in_course",
+      "name": "In Course",
+      "description": "El préstamo está en curso."
+    },
+    "installments": [
+      {
+        "id": "04f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+        "due_date": "2025-02-01T10:00:00Z",
+        "due_amount": 1000.00,
+        "paid_amount": 500.00,
+        "balance": 500.00,
+        "number": 1,
+        "status": {
+          "id": "pending",
+          "name": "Pending",
+          "description": "La cuota está pendiente de pago."
+        }
       }
-    }
-  ]
+    ]
+  },
+  "error": null,
+  "pagination": null
 }
 ```
 
-## Descripción de los Campos
+### Detalles de los Campos
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Objeto con la información del préstamo (detallada abajo).
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Información de paginación, será `null` porque este recurso no es una lista.
 
 ### Campos del Préstamo
 - **id:** Identificador único del préstamo.

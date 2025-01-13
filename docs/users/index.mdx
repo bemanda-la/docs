@@ -10,58 +10,121 @@ Esta guía detalla cómo consultar la información de un usuario en el sistema u
 
 - `user_id` (path): Identificador único del usuario en formato UUID.
 
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  {base_url}/v1/user/{user_id} \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require('node-fetch');
+
+async function getUser(userId, token) {
+  const response = await fetch(`${base_url}/v1/user/${userId}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching user: ${response.statusText}`);
+  }
+
+  const userData = await response.json();
+  console.log(userData);
+}
+
+// Usage example
+const userId = "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e";
+const token = "YOUR_ACCESS_TOKEN";
+getUser(userId, token).catch(console.error);
+```
+
 ## Respuesta
 
-La respuesta incluye la información básica del usuario junto con las relaciones relevantes: direcciones, correos electrónicos y teléfonos.
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
 
-### Ejemplo de Respuesta
+### Estructura de Respuesta
 
 ```json
 {
-  "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
-  "first_name": "Juan",
-  "last_name": "Pérez",
-  "birthdate": "1985-06-15",
-  "gender": "male",
-  "civil_status": "single",
-  "status": "PENDING",
-  "photo_uri": "https://example.com/photo.jpg",
-  "application_id": "01f3d0f9-7c6a-4b6e-97c6-2f3a4c50d78f",
-  "addresses": [
-    {
-      "id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-      "address1": "Calle Principal",
-      "address2": "Apto 101",
-      "city_id": "01c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
-      "state_id": "02c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
-      "postal_code_id": "03c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
-      "country_id": "04c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
-      "primary": true,
-      "not_fiscal_address": false
-    }
-  ],
-  "emails": [
-    {
-      "id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-      "email": "juan.perez@example.com",
-      "verified": true,
-      "primary": true
-    }
-  ],
-  "phones": [
-    {
-      "id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
-      "phone": "+1234567890",
-      "verified": false,
-      "primary": true
-    }
-  ],
-  "created_at": "2025-01-13T10:00:00Z",
-  "updated_at": "2025-01-14T15:00:00Z"
+  "success": true,
+  "data": {
+    "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "first_name": "Juan",
+    "last_name": "Pérez",
+    "birthdate": "1985-06-15",
+    "gender": "male",
+    "civil_status": "single",
+    "status": "PENDING",
+    "photo_uri": "https://example.com/photo.jpg",
+    "application_id": "01f3d0f9-7c6a-4b6e-97c6-2f3a4c50d78f",
+    "addresses": [
+      {
+        "id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+        "address1": "Calle Principal",
+        "address2": "Apto 101",
+        "city_id": "01c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+        "state_id": "02c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+        "postal_code_id": "03c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+        "country_id": "04c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+        "primary": true,
+        "not_fiscal_address": false
+      }
+    ],
+    "emails": [
+      {
+        "id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+        "email": "juan.perez@example.com",
+        "verified": true,
+        "primary": true
+      }
+    ],
+    "phones": [
+      {
+        "id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+        "phone": "+1234567890",
+        "verified": false,
+        "primary": true
+      }
+    ],
+    "created_at": "2025-01-13T10:00:00Z",
+    "updated_at": "2025-01-14T15:00:00Z"
+  },
+  "error": null,
+  "pagination": null
 }
 ```
 
-## Descripción de los Campos
+### Detalles de los Campos
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Objeto con la información del usuario (detallada abajo).
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Información de paginación, será `null` porque este recurso no es una lista.
 
 ### Campos del Usuario
 - **id:** Identificador único del usuario.
@@ -103,3 +166,5 @@ La respuesta incluye la información básica del usuario junto con las relacione
 ## Notas
 
 - Asegúrate de que el `user_id` corresponde a un usuario existente antes de realizar la consulta.
+- Para validar la autenticidad de las solicitudes, utiliza las firmas digitales incluidas en los encabezados del webhook.
+- La respuesta puede incluir información adicional relevante según el contexto del usuario.
