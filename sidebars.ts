@@ -32,6 +32,12 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ["users/index"],
     },
+    {
+      type: "category",
+      label: "Préstamos",
+      collapsed: false,
+      items: ["loans/index"],
+    },
   ],
 };
 

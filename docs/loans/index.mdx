@@ -1,0 +1,107 @@
+# Consulta de Préstamo por ID
+
+Esta guía detalla cómo consultar la información de un préstamo en el sistema utilizando su ID, basada en el modelo definido.
+
+## Endpoint
+
+`GET /v1/loans/:loan_id`
+
+## Parámetros
+
+- `loan_id` (path): Identificador único del préstamo en formato UUID.
+
+## Respuesta
+
+La respuesta incluye la información básica del préstamo y sus relaciones relevantes, según lo definido en el modelo.
+
+### Ejemplo de Respuesta
+
+```json
+{
+  "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+  "user_id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+  "application_id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+  "product_id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+  "currency_id": "USD",
+  "requested_amount": 10000.00,
+  "interest_rate": 5.00,
+  "penalty_rate": 2.00,
+  "bonus_amount": 500.00,
+  "bonus_percentage": 5.00,
+  "total_amount": 10500.00,
+  "paid_amount": 5000.00,
+  "balance": 5500.00,
+  "installment_quantity": 12,
+  "requested_date": "2025-01-01T10:00:00Z",
+  "approved_date": "2025-01-05T10:00:00Z",
+  "credited_date": "2025-01-06T10:00:00Z",
+  "last_payment_date": "2025-06-01T10:00:00Z",
+  "fully_paid_date": null,
+  "status": {
+    "id": "in_course",
+    "name": "In Course",
+    "description": "El préstamo está en curso."
+  },
+  "installments": [
+    {
+      "id": "04f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+      "due_date": "2025-02-01T10:00:00Z",
+      "due_amount": 1000.00,
+      "paid_amount": 500.00,
+      "balance": 500.00,
+      "number": 1,
+      "status": {
+        "id": "pending",
+        "name": "Pending",
+        "description": "La cuota está pendiente de pago."
+      }
+    }
+  ]
+}
+```
+
+## Descripción de los Campos
+
+### Campos del Préstamo
+- **id:** Identificador único del préstamo.
+- **user_id:** Identificador único del usuario asociado al préstamo.
+- **application_id:** Identificador de la aplicación asociada.
+- **product_id:** Identificador del producto financiero asociado.
+- **currency_id:** Identificador de la moneda del préstamo.
+- **requested_amount:** Monto solicitado por el usuario.
+- **interest_rate:** Tasa de interés aplicada al préstamo.
+- **penalty_rate:** Tasa de penalización por incumplimiento.
+- **bonus_amount:** Monto del bono asociado al préstamo.
+- **bonus_percentage:** Porcentaje del bono sobre el préstamo.
+- **total_amount:** Monto total del préstamo, incluyendo intereses y bonos.
+- **paid_amount:** Monto pagado hasta el momento.
+- **balance:** Saldo pendiente del préstamo.
+- **installment_quantity:** Cantidad total de cuotas del préstamo.
+- **requested_date:** Fecha en la que se solicitó el préstamo.
+- **approved_date:** Fecha en la que se aprobó el préstamo.
+- **credited_date:** Fecha en la que se acreditaron los fondos.
+- **last_payment_date:** Fecha del último pago realizado.
+- **fully_paid_date:** Fecha en la que se completó el pago del préstamo (si aplica).
+- **status:** Información del estado actual del préstamo:
+  - **id:** Identificador único del estado (e.g., `in_course`).
+  - **name:** Nombre descriptivo del estado.
+  - **description:** Descripción del estado.
+
+### Relaciones
+#### Cuotas
+- **id:** Identificador único de la cuota.
+- **due_date:** Fecha de vencimiento de la cuota.
+- **due_amount:** Monto debido para la cuota.
+- **paid_amount:** Monto pagado para la cuota.
+- **balance:** Saldo pendiente de la cuota.
+- **number:** Número de la cuota.
+- **status:** Información del estado actual de la cuota:
+  - **id:** Identificador único del estado (e.g., `pending`).
+  - **name:** Nombre descriptivo del estado.
+  - **description:** Descripción del estado.
+
+## Notas
+
+- Asegúrate de que el `loan_id` corresponde a un préstamo existente antes de realizar la consulta.
+- Para validar la autenticidad de las solicitudes, utiliza las firmas digitales incluidas en los encabezados del webhook.
+- La respuesta puede incluir información adicional relevante según el contexto del préstamo.
