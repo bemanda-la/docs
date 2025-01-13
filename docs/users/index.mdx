@@ -1,0 +1,105 @@
+# Consulta de Usuario por ID
+
+Esta guía detalla cómo consultar la información de un usuario en el sistema utilizando su ID, basada en el modelo definido.
+
+## Endpoint
+
+`GET /v1/user/:user_id`
+
+## Parámetros
+
+- `user_id` (path): Identificador único del usuario en formato UUID.
+
+## Respuesta
+
+La respuesta incluye la información básica del usuario junto con las relaciones relevantes: direcciones, correos electrónicos y teléfonos.
+
+### Ejemplo de Respuesta
+
+```json
+{
+  "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+  "first_name": "Juan",
+  "last_name": "Pérez",
+  "birthdate": "1985-06-15",
+  "gender": "male",
+  "civil_status": "single",
+  "status": "PENDING",
+  "photo_uri": "https://example.com/photo.jpg",
+  "application_id": "01f3d0f9-7c6a-4b6e-97c6-2f3a4c50d78f",
+  "addresses": [
+    {
+      "id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+      "address1": "Calle Principal",
+      "address2": "Apto 101",
+      "city_id": "01c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+      "state_id": "02c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+      "postal_code_id": "03c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+      "country_id": "04c5d7e9-3f6a-4b6e-93b6-2f1a4c70d78f",
+      "primary": true,
+      "not_fiscal_address": false
+    }
+  ],
+  "emails": [
+    {
+      "id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+      "email": "juan.perez@example.com",
+      "verified": true,
+      "primary": true
+    }
+  ],
+  "phones": [
+    {
+      "id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+      "phone": "+1234567890",
+      "verified": false,
+      "primary": true
+    }
+  ],
+  "created_at": "2025-01-13T10:00:00Z",
+  "updated_at": "2025-01-14T15:00:00Z"
+}
+```
+
+## Descripción de los Campos
+
+### Campos del Usuario
+- **id:** Identificador único del usuario.
+- **first_name:** Nombre del usuario.
+- **last_name:** Apellido del usuario.
+- **birthdate:** Fecha de nacimiento del usuario.
+- **gender:** Género del usuario.
+- **civil_status:** Estado civil del usuario.
+- **status:** Estado actual del usuario (e.g., PENDING, ACTIVE).
+- **photo_uri:** URL de la foto del usuario.
+- **application_id:** Identificador de la aplicación asociada al usuario.
+- **created_at:** Fecha de creación del usuario.
+- **updated_at:** Fecha de la última actualización de la información del usuario.
+
+### Relaciones
+#### Direcciones
+- **id:** Identificador único de la dirección.
+- **address1:** Dirección principal.
+- **address2:** Complemento de la dirección (opcional).
+- **city_id:** Identificador de la ciudad.
+- **state_id:** Identificador del estado.
+- **postal_code_id:** Identificador del código postal.
+- **country_id:** Identificador del país.
+- **primary:** Indica si es la dirección principal del usuario.
+- **not_fiscal_address:** Indica si no es una dirección fiscal.
+
+#### Correos Electrónicos
+- **id:** Identificador único del correo electrónico.
+- **email:** Dirección de correo electrónico.
+- **verified:** Indica si el correo electrónico ha sido verificado.
+- **primary:** Indica si es el correo principal del usuario.
+
+#### Teléfonos
+- **id:** Identificador único del número de teléfono.
+- **phone:** Número de teléfono.
+- **verified:** Indica si el número de teléfono ha sido verificado.
+- **primary:** Indica si es el teléfono principal del usuario.
+
+## Notas
+
+- Asegúrate de que el `user_id` corresponde a un usuario existente antes de realizar la consulta.

@@ -1,0 +1,75 @@
+# Documentación de Eventos de Webhooks
+
+Esta sección detalla los eventos disponibles que puedes suscribirte mediante nuestros webhooks. Cada evento tiene un esquema específico para el cuerpo del mensaje enviado en la notificación.
+
+## Eventos Disponibles
+
+### 1. Creación de Usuario
+
+**Descripción:** Este evento se dispara cuando se crea un nuevo usuario en la plataforma. Después de recibir este evento, se recomienda consultar la información del usuario en la API correspondiente:
+
+`GET /v1/user/:user_id`
+
+- **Nombre del evento:** `user.created`
+- **Ejemplo de payload:**
+
+```json
+{
+  "event": "user.created",
+  "data": {
+    "user_id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "application_id": "01f3d0f9-7c6a-4b6e-97c6-2f3a4c50d78f"
+  }
+}
+```
+
+---
+
+### 2. Modificación de Usuario
+
+**Descripción:** Este evento se dispara cuando se modifica la información de un usuario existente. Después de recibir este evento, se recomienda consultar la información actualizada del usuario en la API correspondiente:
+
+`GET /v1/user/:user_id`
+
+- **Nombre del evento:** `user.updated`
+- **Ejemplo de payload:**
+
+```json
+{
+  "event": "user.updated",
+  "data": {
+    "user_id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "application_id": "01f3d0f9-7c6a-4b6e-97c6-2f3a4c50d78f"
+  }
+}
+```
+
+---
+
+### 3. Creación de un Préstamo
+
+**Descripción:** Este evento se dispara cuando se crea un nuevo préstamo en la plataforma. Después de recibir este evento, se recomienda consultar la información del préstamo en la API correspondiente:
+
+`GET /v1/loans/:loan_id`
+
+- **Nombre del evento:** `loan.created`
+- **Ejemplo de payload:**
+
+```json
+{
+  "event": "loan.created",
+  "data": {
+    "loan_id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "user_id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "application_id": "01f3d0f9-7c6a-4b6e-97c6-2f3a4c50d78f"
+  }
+}
+```
+
+## Consideraciones Generales
+
+- **Campos comunes:** Todos los eventos incluyen un campo `event` que indica el tipo de evento y un objeto `data` que contiene los detalles específicos del evento.
+- **Consulta del recurso:** Es recomendable que, tras recibir un evento, se realice una consulta a la API correspondiente para obtener información actualizada del recurso.
+- **Seguridad:** Asegúrate de validar la firma digital incluida en los encabezados del webhook para garantizar la autenticidad de las solicitudes. Para más detalles, consulta la sección de [validación de firmas](./index.mdx).
+
+Para más información sobre cómo manejar estos eventos en tu servidor, consulta la [guía de implementación de webhooks](./index.mdx).

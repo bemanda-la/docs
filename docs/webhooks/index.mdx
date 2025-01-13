@@ -1,0 +1,59 @@
+# Introducción a Webhooks
+
+Los webhooks permiten a tu sistema recibir notificaciones automáticas en tiempo real cuando ocurren ciertos eventos en nuestra plataforma. Esto elimina la necesidad de realizar consultas periódicas a nuestra API, mejorando la eficiencia y reduciendo la latencia en la integración.
+
+## Cómo funcionan los webhooks
+
+1. **Configura tu URL de Webhook:** Proporciona una URL en tu sistema que esté preparada para recibir solicitudes HTTP POST.
+2. **Suscríbete a eventos:** Selecciona los eventos relevantes para los que deseas recibir notificaciones.
+3. **Recibe notificaciones:** Cuando ocurra un evento, enviaremos una solicitud HTTP POST a la URL configurada con los detalles del evento en formato JSON.
+
+## Formato de las solicitudes
+
+Cada solicitud de webhook incluirá los siguientes elementos:
+
+- **Encabezados HTTP:**
+  - `Content-Type: application/json`
+  - `X-Signature: <firma>` (para validar la autenticidad de la solicitud, ver [Validación de firmas](#validacion-de-firmas))
+
+- **Cuerpo del mensaje:**
+  Contiene un objeto JSON con los detalles del evento. Para más información sobre los diferentes eventos y sus esquemas, consulta la [documentación de eventos](./events.mdx).
+
+## Validación de firmas
+
+Por razones de seguridad, todas las solicitudes de webhook incluyen una firma digital en el encabezado `X-Signature`. Esta firma permite verificar que la solicitud proviene de nuestra plataforma y que no ha sido alterada.
+
+Para validar la firma:
+
+1. Calcula un hash HMAC usando el cuerpo del mensaje y la clave secreta de tu webhook.
+2. Compara el hash calculado con el valor en el encabezado `X-Signature`.
+
+Ejemplo de código para validación:
+
+```javascript
+const crypto = require('crypto');
+
+function validateSignature(body, receivedSignature, secretKey) {
+  const computedSignature = crypto
+    .createHmac('sha256', secretKey)
+    .update(body, 'utf8')
+    .digest('hex');
+  return computedSignature === receivedSignature;
+}
+```
+
+## Manejo de errores
+
+Si tu servidor no puede procesar una solicitud de webhook, deberás responder con un código de estado HTTP diferente a 2xx. En este caso:
+
+1. Reintentaremos la entrega del webhook hasta 10 veces.
+2. El intervalo entre reintentos seguirá una fórmula de retroceso exponencial: `2 ^ (intentos - 1) * retraso`, donde el retraso es de 5 segundos.
+3. Después de 10 intentos fallidos, el webhook será deshabilitado automáticamente.
+
+## Mejoras y mejores prácticas
+
+- **Seguridad:** Utiliza HTTPS para proteger la comunicación entre tu servidor y nuestra plataforma.
+- **Escalabilidad:** Asegúrate de que tu servidor pueda manejar múltiples solicitudes simultáneamente.
+- **Logs:** Registra todas las solicitudes de webhooks y sus respuestas para facilitar la depuración.
+
+Para obtener más detalles sobre cómo configurar y probar los webhooks, consulta nuestras guías avanzadas en la documentación.

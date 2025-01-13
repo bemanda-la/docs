@@ -20,7 +20,7 @@ El proceso de autenticación sigue el flujo de credenciales de cliente (`client_
 
 **URL del endpoint:**
 ```
-POST /oauth/token
+POST /v1/oauth/token
 ```
 
 **Encabezados Requeridos:**
@@ -39,7 +39,7 @@ Content-Type: application/x-www-form-urlencoded
 
 ```bash
 curl -X POST \
-  {url_base}/oauth/token \
+  {url_base}/v1/oauth/token \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -d 'client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&grant_type=client_credentials'
 ```
