@@ -10,6 +10,9 @@ Esta guía detalla cómo consultar la información de un listado de productos de
 
 - `page` (opcional): Número de la página que se desea consultar. Valor por defecto: `1` .
 - `items_per_page` (opcional): Cantidad de elementos por página. Valor por defecto: `50` .
+- `status` (opcional): Filtrar productos por estado: `Available`.
+- `orderByField` (opcional): Campo por el cual se desea ordenar los productos. Valores permitidos: `id`, `status`, `granted_capital`, `inactivation_date`.
+- `orderByDirection` (opcional): Dirección del ordenamiento. Valor por defecto: `desc`: Orden descendente. `asc`: Orden ascendente.
 
 ## Autenticación
 
@@ -37,8 +40,16 @@ curl -X GET \
 ```javascript
 const fetch = require("node-fetch");
 
-async function getProducts(page = 1, itemsPerPage = 50, token) {
-  const response = await fetch(`${base_url}/v1/apps/products?page=${page}&items_per_page=${itemsPerPage}`, {
+async function getProducts(page = 1, itemsPerPage = 50, token, status, orderByField, orderByDirection) {
+  const queryParams = new URLSearchParams({
+    page,
+    items_per_page: itemsPerPage,
+    ...(status && { status }),
+    ...(orderByField && { orderByField }),
+    ...(orderByDirection && { orderByDirection }),
+  }).toString();
+
+  const response = await fetch(`${base_url}/v1/loans/apps/products?${queryParams}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -58,7 +69,7 @@ async function getProducts(page = 1, itemsPerPage = 50, token) {
 const page = 1;
 const itemsPerPage = 50;
 const token = "YOUR_ACCESS_TOKEN";
-getProducts(page, itemsPerPage, token).catch(console.error);
+getProducts(page, itemsPerPage, token, "Available", "status", "asc").catch(console.error);
 
 if (!response.ok) {
   throw new Error(`Error fetching loan: ${response.statusText}`);
@@ -79,6 +90,7 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
       "id": "20a9ad2e-8867-4242-b9f4-310865db5f82",
       "status": "Available",
       "name": "Adelanto inmediato",
+      "granted_capital": 5000,
       "inactivation_date": null,
       "interest_rate": "5"
     },
@@ -86,15 +98,9 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
       "id": "20a9ad2e-8867-4242-b9f4-310865db5f83",
       "status": "Available",
       "name": "Préstamo Personal",
+      "granted_capital": 10000,
       "inactivation_date": null,
-      "interest_rate": null
-    },
-    {
-      "id": "20a9ad2e-8867-4242-b9f4-310865db5f84",
-      "status": "Available",
-      "name": "Leasing",
-      "inactivation_date": null,
-      "interest_rate": null
+      "interest_rate": "4"
     }
   ],
   "pagination": {
@@ -126,8 +132,9 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
 ### Campos del Listado de productos
 
 - **id:** Identificador único del producto.
-- **status:** Información del nombre del estado actual del producto. (Cancelado, Finalizado, Atrasado, Otorgado, En mora, En curso, Pérdida, Pendiente, Rechazado).
+- **status:** Información del nombre del estado actual del producto. (Available).
 - **name:** Informacion del nombre del producto.
+- **granted_capital:** Capital otorgado total de los préstamos asociados a este producto.
 - **inactivation_date:** Identificador de la fecha de inactivación del producto, (si aplica).
 - **interest_rate:** Tasa de interés asociada al producto (puede ser null si no aplica).
 
