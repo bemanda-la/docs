@@ -1,0 +1,225 @@
+# Consulta de Préstamos por aplicación
+
+Este endpoint permite obtener la lista de préstamos asociados a una aplicación específica. La información incluye detalles del préstamo y, cuando es posible, información del usuario asociado.
+
+## Endpoint
+
+`GET /v1/loans/apps/loans`
+
+## Requisitos de Acceso
+
+- **Scope necesario:** `admin`
+- **Autenticación:** Se requiere un token Bearer válido.
+
+Incluye el encabezado `Authorization` en tu solicitud:
+
+```http
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Parámetros
+
+### Query Parameters
+
+- **page** (opcional): Número de página a consultar (por defecto `1`).
+- **items_per_page** (opcional): Cantidad de elementos por página (por defecto `10`).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  {base_url}/v1/loans/apps/loans?page=1&items_per_page=10 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+import fetch from "node-fetch";
+
+async function getLoansByAppId(token, page = 1, itemsPerPage = 10) {
+  const response = await fetch(
+    `${base_url}/v1/loans/apps/loans?page=${page}&items_per_page=${itemsPerPage}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error fetching loans: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  console.log(data);
+}
+
+// Ejemplo de uso
+const token = "YOUR_ACCESS_TOKEN";
+getLoansByAppId(token).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye una lista de créditos asociados a la aplicación y su paginación. Cuando es posible, se agregan datos del usuario asociado.
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "30ca9aae-0db3-44d9-8011-20afd9d253d5",
+      "user_id": "01922482-57ce-79a3-9f30-ce25095dc7d5",
+      "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+      "product_id": "52d299bb-b708-4783-99c1-0e596fdd9efa",
+      "currency_id": "ARS",
+      "requested_amount": "1000",
+      "interest_rate": "5",
+      "penalty_rate": "1",
+      "bonus_amount": "50",
+      "bonus_percentage": "5",
+      "total_amount": "1000",
+      "paid_amount": "1000",
+      "balance": "55",
+      "installment_quantity": 0,
+      "requested_date": "2024-07-30T18:47:18.746Z",
+      "approved_date": null,
+      "credited_date": null,
+      "last_payment_date": null,
+      "fully_paid_date": "2024-07-30T18:47:18.746Z",
+      "status_id": "pending",
+      "other_info": null,
+      "product": {
+        "id": "52d299bb-b708-4783-99c1-0e596fdd9efa",
+        "application_id": "01930217-0a4d-79a0-acaf-e7b37cdab045",
+        "name": "Amort.Variable AGO 23 18.0",
+        "primary_color": "#FFFFFF",
+        "secondary_color": "#000000",
+        "description": "",
+        "image_url": null,
+        "slogan": "",
+        "currency_id": "ARS",
+        "category_id": "category1",
+        "status_id": "status1",
+        "other_info": {}
+      },
+      "status": {
+        "id": "pending",
+        "name": "Pendiente",
+        "description": "Loan is pending"
+      },
+      "user_info": {
+        "first_name": "Juan",
+        "last_name": "Pérez"
+      },
+      "error": null
+    },
+    {
+      "id": "2f9467cd-22ee-4558-a964-ab39cc8fc81d",
+      "user_id": "testing-5",
+      "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+      "product_id": null,
+      "currency_id": "ars",
+      "requested_amount": "900",
+      "interest_rate": "0",
+      "penalty_rate": "0",
+      "bonus_amount": "0",
+      "bonus_percentage": "0",
+      "total_amount": "900",
+      "paid_amount": "0",
+      "balance": "900",
+      "installment_quantity": 9,
+      "requested_date": "2024-12-10T00:00:00.000Z",
+      "approved_date": "2024-12-10T00:00:00.000Z",
+      "credited_date": "2024-12-10T00:00:00.000Z",
+      "last_payment_date": null,
+      "fully_paid_date": null,
+      "status_id": "in_progress",
+      "other_info": {},
+      "product": null,
+      "status": {
+        "id": "in_progress",
+        "name": "En curso",
+        "description": "Loan in progress"
+      },
+      "user_info": null,
+      "error": "User info could not be retrieved"
+    }
+  ],
+  "error": null,
+  "pagination": {
+    "page": 1,
+    "items_per_page": 10,
+    "total_items": 50,
+    "total_pages": 5
+  }
+}
+```
+
+### Detalles de los Campos
+
+### Campos Principales
+
+- **success:** Indica si la solicitud fue exitosa.
+- **data:** Lista de préstamos del usuario autenticado.
+- **error:** Detalles del error (si existe).
+- **pagination:** Información de paginación.
+
+### Campos de un Producto de Credito
+
+- **id:** Identificador único del crédito.
+- **user_id:** Identificador del usuario asociado al crédito.
+- **application_id:** Identificador de la aplicación asociada al crédito.
+- **product_id:** Identificador del producto asociado al crédito.
+- **currency_id:** Identificador de la moneda utilizada para el crédito (e.g., `ARS`).
+- **requested_amount:** Monto solicitado en pesos generalmente.
+- **interest_rate:** Tasa de interés anual (%).
+- **penalty_rate:** Tasa de penalización (%).
+- **bonus_amount:** Monto de bonificación aplicado al crédito.
+- **bonus_percentage:** Porcentaje de bonificación aplicado.
+- **total_amount:** Monto total del crédito, incluyendo intereses y otros cargos.
+- **paid_amount:** Monto total pagado por el usuario.
+- **balance:** Saldo pendiente del crédito.
+- **installment_quantity:** Cantidad de cuotas asociadas al crédito.
+- **requested_date:** Fecha en que se solicitó el crédito.
+- **approved_date:** Fecha en que el crédito fue aprobado (puede ser `null` si no está aprobado).
+- **credited_date:** Fecha en que los fondos fueron acreditados (puede ser `null` si no ha sido acreditado).
+- **last_payment_date:** Fecha del último pago realizado (puede ser `null` si no se han realizado pagos).
+- **fully_paid_date:** Fecha en que el crédito fue completamente pagado.
+- **status_id:** Identificador del estado actual del crédito.
+- **status:** Información del estado del crédito:
+  - **id:** Identificador único del estado.
+  - **name:** Nombre descriptivo del estado (e.g., `Pendiente`).
+  - **description:** Descripción detallada del estado.
+- **product:** Detalles del producto asociado al crédito:
+  - **id:** Identificador único del producto.
+  - **application_id:** Identificador de la aplicación asociada al producto.
+  - **name:** Nombre descriptivo del producto.
+  - **primary_color:** Color principal del producto en formato hexadecimal.
+  - **secondary_color:** Color secundario del producto en formato hexadecimal.
+  - **description:** Descripción del producto.
+  - **image_url:** URL de la imagen asociada al producto (puede ser `null`).
+  - **slogan:** Eslogan promocional del producto.
+  - **currency_id:** Moneda asociada al producto.
+  - **category_id:** Categoría del producto.
+  - **status_id:** Estado del producto.
+  - **other_info:** Información adicional del producto.
+- **user_info:** Información del usuario asociado al crédito:
+  - **first_name:** Primer nombre del usuario.
+  - **last_name:** Apellido del usuario.
+- **error:** Detalles sobre errores al obtener información del usuario (si aplica).
+
+## Notas
+
+- Este endpoint es paginado. Utiliza los parámetros page y items_per_page para controlar la cantidad de resultados devueltos. Si no se especifican, se utilizarán los valores por defecto (page=1 y items_per_page=10).
+- Requiere permisos específicos (`scope: admin`).

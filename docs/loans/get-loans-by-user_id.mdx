@@ -1,0 +1,221 @@
+# Consulta de Préstamos por Usuario
+
+Este endpoint permite obtener la lista de préstamos asociados al usuario autenticado. La autenticación y el alcance (`scope`) son obligatorios para acceder a este recurso.
+
+## Endpoint
+
+`GET /v1/loans/user/loans`
+
+## Parámetros
+
+### Query Parameters
+
+- **page** (opcional): Número de página a consultar (por defecto `1`).
+- **items_per_page** (opcional): Cantidad de elementos por página (por defecto `10`).
+
+## Autenticación
+
+Requiere autenticación mediante un token Bearer con el `scope` `user`. Incluye el encabezado `Authorization` en tu solicitud:
+
+```http
+Authorization: Bearer <tu_token>
+```
+
+El usuario autenticado se determina a partir del token enviado.
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  {base_url}/v1/loans/user/loans?page=1&items_per_page=10 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+import fetch from "node-fetch";
+
+async function getUserLoans(token, page = 1, itemsPerPage = 10) {
+  const response = await fetch(
+    `${base_url}/v1/loans//user/loans?page=${page}&items_per_page=${itemsPerPage}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error fetching loans: ${response.statusText}`);
+  }
+
+  const loansData = await response.json();
+  console.log(loansData);
+}
+
+// Usage example
+const token = "YOUR_ACCESS_TOKEN";
+getUserLoans(token).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar con datos paginados. Los préstamos tienen una estructura similar al modelo del sistema.
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "1c5a332f-7495-4d4a-a739-fe348c1691bc",
+      "user_id": "01917175-3a97-7c33-868a-7c5723e34687",
+      "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+      "product_id": "20a9ad2e-8867-4242-b9f4-310865db5f82",
+      "currency_id": "ARS",
+      "requested_amount": "1000",
+      "interest_rate": "5",
+      "penalty_rate": "1",
+      "bonus_amount": "50",
+      "bonus_percentage": "5",
+      "total_amount": "1050",
+      "paid_amount": "525",
+      "balance": "525",
+      "installment_quantity": 12,
+      "requested_date": "2024-07-12T15:12:24.614Z",
+      "approved_date": null,
+      "credited_date": null,
+      "last_payment_date": null,
+      "fully_paid_date": null,
+      "status_id": "in_progress",
+      "other_info": null,
+      "product": {
+        "id": "20a9ad2e-8867-4242-b9f4-310865db5f82",
+        "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+        "name": "Adelanto inmediato",
+        "primary_color": "#FFB95F",
+        "secondary_color": "#000000",
+        "description": "Adelanto inmediato",
+        "image_url": null,
+        "slogan": "Get your loan now!",
+        "currency_id": "USD",
+        "category_id": "category2",
+        "status_id": "status1",
+        "other_info": {}
+      },
+      "status": {
+        "id": "in_progress",
+        "name": "En curso",
+        "description": "Loan in progress"
+      },
+      "installments": [
+        {
+          "id": "14cc84a0-4cdb-4f99-974b-2a86f3211bd9",
+          "loan_id": "1c5a332f-7495-4d4a-a739-fe348c1691bc",
+          "due_date": "2024-11-11T15:12:24.711Z",
+          "currency_id": "ARS",
+          "due_amount": "8000",
+          "paid_amount": "0",
+          "balance": "8000",
+          "number": 1,
+          "status_id": "in_arrear",
+          "created_at": "2024-11-19T17:35:02.671Z",
+          "updated_at": "2024-11-19T17:35:31.610Z"
+        }
+      ]
+    }
+  ],
+  "error": null,
+  "pagination": {
+    "page": 1,
+    "items_per_page": 10,
+    "total_items": 50,
+    "total_pages": 5
+  }
+}
+```
+
+### Detalles de los Campos
+
+### Campos Principales
+
+- **success:** Indica si la solicitud fue exitosa.
+- **data:** Lista de préstamos del usuario autenticado.
+- **error:** Detalles del error (si existe).
+- **pagination:** Información de paginación.
+
+### Campos del Préstamo
+
+- **id:** Identificador único del préstamo.
+- **user_id:** Identificador único del usuario asociado al préstamo.
+- **application_id:** Identificador de la aplicación asociada.
+- **product_id:** Identificador del producto financiero asociado.
+- **currency_id:** Identificador de la moneda del préstamo.
+- **requested_amount:** Monto solicitado por el usuario.
+- **interest_rate:** Tasa de interés aplicada al préstamo.
+- **penalty_rate:** Tasa de penalización por incumplimiento.
+- **bonus_amount:** Monto del bono asociado al préstamo.
+- **bonus_percentage:** Porcentaje del bono sobre el préstamo.
+- **total_amount:** Monto total del préstamo, incluyendo intereses y bonos.
+- **paid_amount:** Monto pagado hasta el momento.
+- **balance:** Saldo pendiente del préstamo.
+- **installment_quantity:** Cantidad total de cuotas del préstamo.
+- **requested_date:** Fecha en la que se solicitó el préstamo.
+- **approved_date:** Fecha en la que se aprobó el préstamo.
+- **credited_date:** Fecha en la que se acreditaron los fondos.
+- **last_payment_date:** Fecha del último pago realizado.
+- **fully_paid_date:** Fecha en la que se completó el pago del préstamo (si aplica).
+- **other_info:** Información adicional relacionada con el prestamo.
+- **status:** Información del estado actual del préstamo:
+  - **id:** Identificador único del estado (e.g., `in_course`).
+  - **name:** Nombre descriptivo del estado.
+  - **description:** Descripción del estado.
+- **installments:** Lista de cuotas asociadas al crédito.
+- **bonus_conditions:** Condiciones aplicables al bono otorgado.
+- **audit_logs:** Registros de auditoría relacionados con el crédito.
+- **product:** Detalles del producto asociado al crédito.
+
+### Relaciones
+
+#### Cuotas
+
+- **id:** Identificador único de la cuota.
+- **due_date:** Fecha de vencimiento de la cuota.
+- **due_amount:** Monto debido para la cuota.
+- **paid_amount:** Monto pagado para la cuota.
+- **balance:** Saldo pendiente de la cuota.
+- **number:** Número de la cuota.
+- **status:** Información del estado actual de la cuota:
+  - **id:** Identificador único del estado (e.g., `pending`).
+  - **name:** Nombre descriptivo del estado.
+  - **description:** Descripción del estado.
+
+#### Product
+
+- **id:** Identificador único del producto.
+- **application_id:** Identificador único de la aplicación asociada al producto.
+- **name:** Nombre descriptivo del producto.
+- **primary_color:** Color principal del producto en formato hexadecimal.
+- **secondary_color:** Color secundario del producto en formato hexadecimal.
+- **description:** Descripción del producto.
+- **image_url:** URL de la imagen asociada al producto (puede ser `null`).
+- **slogan:** Eslogan promocional del producto.
+- **currency_id:** Moneda utilizada por el producto (e.j., `USD`).
+- **category_id:** Identificador único de la categoría del producto.
+- **status_id:** Identificador único del estado del producto.
+- **other_info:** Información adicional relacionada con el producto.
+
+## Notas
+
+- Este endpoint es paginado. Ajusta los parámetros `page` y `items_per_page` según tus necesidades.
+- Requiere permisos específicos (`scope: user`).
+- La respuesta incluirá únicamente los préstamos asociados al usuario autenticado.
