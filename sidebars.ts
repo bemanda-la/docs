@@ -24,7 +24,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Webhooks",
       collapsed: false,
-      items: ["webhooks/index", "webhooks/events"],
+      items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
     },
     {
       type: "category",
