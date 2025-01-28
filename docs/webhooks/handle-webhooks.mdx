@@ -1,0 +1,200 @@
+# Endpoints: Webhooks
+
+Esta sección detalla el funcionamiento y uso de los endpoints relacionados con webhooks en nuestra API. Los webhooks permiten la recepción de notificaciones en tiempo real sobre eventos relevantes en nuestra plataforma. A continuación, se describen los diferentes endpoints y sus propósitos.
+
+---
+
+## **Estados de los webhooks**
+
+Los webhooks pueden estar en uno de los siguientes estados:
+
+- **ACTIVE**: Son los webhooks que están activos y funcionando correctamente.
+- **PAUSED**: Webhooks pausados debido a errores al intentar ejecutar las solicitudes hacia su URL configurada.
+- **PENDING**: Webhooks que aún no han pasado el proceso de verificación (challenge).
+
+---
+
+## **1. Obtener todos los webhooks**
+
+### **Endpoint**
+`GET /webhooks`
+
+### **Descripción**
+Este endpoint devuelve una lista de todos los webhooks registrados en tu cuenta.
+
+### **Ejemplo de solicitud**
+```http
+GET /webhooks HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "12345",
+      "url": "https://example.com/webhook",
+      "events": ["user.create", "loan.create"],
+      "status": "ACTIVE",
+      "created_at": "2025-01-27T10:00:00Z"
+    },
+    {
+      "id": "67890",
+      "url": "https://example.com/webhook2",
+      "events": ["user.update"],
+      "status": "PAUSED",
+      "created_at": "2025-01-26T14:30:00Z"
+    }
+  ]
+}
+```
+
+---
+
+## **2. Crear un webhook**
+
+### **Endpoint**
+`POST /webhooks`
+
+### **Descripción**
+Registra un nuevo webhook especificando la URL de destino, los eventos a los que deseas suscribirte y un secreto para la validación de firmas.
+
+### **Body de la solicitud**
+```json
+{
+  "url": "https://example.com/webhook",
+  "events": ["user.create", "loan.create"],
+  "secret": "my-secret-key"
+}
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "12345",
+    "url": "https://example.com/webhook",
+    "events": ["user.create", "loan.create"],
+    "status": "PENDING",
+    "created_at": "2025-01-27T10:00:00Z"
+  }
+}
+```
+
+### **Validaciones**
+- La URL debe ser válida y accesible.
+- El array `events` debe contener al menos un evento válido.
+- El campo `secret` es obligatorio y debe ser un string no vacío.
+
+---
+
+## **3. Reintentar el challenge de un webhook**
+
+### **Endpoint**
+`POST /webhooks/:id/retry-challenge`
+
+### **Descripción**
+Reintenta el envío del challenge a la URL del webhook para verificar que sea accesible y válido.
+
+### **Parámetro de ruta**
+- `id`: Identificador único del webhook.
+
+### **Ejemplo de solicitud**
+```http
+POST /webhooks/12345/retry-challenge HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+  "success": true,
+  "message": "Challenge reenviado exitosamente."
+}
+```
+
+### **Errores posibles**
+- `404 Not Found`: Si el webhook con el ID especificado no existe.
+- `400 Bad Request`: Si la URL del webhook no responde correctamente al challenge.
+
+---
+
+## **4. Reactivar un webhook pausado**
+
+### **Endpoint**
+`POST /webhooks/:id/resume`
+
+### **Descripción**
+Cambia el estado de un webhook de `PAUSED` a `ACTIVE`.
+
+### **Parámetro de ruta**
+- `id`: Identificador único del webhook.
+
+### **Ejemplo de solicitud**
+```http
+POST /webhooks/12345/resume HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+  "success": true,
+  "message": "Webhook reactivado exitosamente."
+}
+```
+
+### **Errores posibles**
+- `404 Not Found`: Si el webhook con el ID especificado no existe.
+- `400 Bad Request`: Si el webhook no está en estado `PAUSED`.
+
+---
+
+## **5. Eliminar un webhook**
+
+### **Endpoint**
+`DELETE /webhooks/:id`
+
+### **Descripción**
+Elimina un webhook por su ID.
+
+### **Parámetro de ruta**
+- `id`: Identificador único del webhook.
+
+### **Ejemplo de solicitud**
+```http
+DELETE /webhooks/12345 HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+  "success": true,
+  "message": "Webhook eliminado exitosamente."
+}
+```
+
+### **Errores posibles**
+- `404 Not Found`: Si el webhook con el ID especificado no existe.
+
+---
+
+## **6. Mejoras y mejores prácticas para los webhooks**
+
+- **Verificaciones previas:** Antes de reintentar un challenge o reactivar un webhook, valida que el estado actual permita la operación.
+- **Logs detallados:** Registra todos los intentos de reintento o reactivación para facilitar la depuración.
+- **Uso de HTTPS:** Asegúrate de que las URLs configuradas para los webhooks utilicen HTTPS para proteger la comunicación.
+- **Tiempo de respuesta:** Diseña tu sistema para responder a las solicitudes de webhooks en menos de 5 segundos.
+
+---
+
+Para más información sobre cómo configurar los webhooks y sus validaciones, consulta nuestra [guía principal de webhooks](./webhooks-intro.mdx).
+
