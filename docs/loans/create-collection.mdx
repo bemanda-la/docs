@@ -4,7 +4,7 @@ Este endpoint permite crear una nueva cobranza para un préstamo específico, as
 
 ## Endpoint
 
-**POST** `/v1/loans/apps/loans/:loan_id/new_collection`
+**POST** `/apps/loans/:loan_id/new_collection`
 
 ### Requisitos de Acceso
 
@@ -60,7 +60,7 @@ import fetch from "node-fetch";
 
 async function createNewCollection(token, loanId, amount, payDate) {
   const response = await fetch(
-    `${base_url}/v1/loans/apps/loans/${loanId}/new_collection`,
+    `${base_url}/apps/loans/${loanId}/new_collection`,
     {
       method: "POST",
       headers: {
