@@ -35,18 +35,22 @@ Authorization: Bearer <token>
   "success": true,
   "data": [
     {
-      "id": "12345",
-      "url": "https://example.com/webhook",
-      "events": ["user.create", "loan.create"],
-      "status": "ACTIVE",
-      "created_at": "2025-01-27T10:00:00Z"
+        "id": "d91cfd6c-cb8f-40df-8f3f-142872df2122",
+        "url": "http://localhost:3000/challenge_test",
+        "challenge": "7f4d44b0-17dc-410d-a4dc-7d4527349b9a",
+        "secret": "pruebaa",
+        "status": "ACTIVE",
+        "created_at": "2025-01-29T14:13:31.018Z",
+        "updated_at": "2025-01-30T18:24:15.384Z"
     },
     {
-      "id": "67890",
-      "url": "https://example.com/webhook2",
-      "events": ["user.update"],
-      "status": "PAUSED",
-      "created_at": "2025-01-26T14:30:00Z"
+        "id": "9da82a17-c28a-4a8f-82ba-b3b9bdbca825",
+        "url": "http://localhost:3000/webhooks/challenge_test",
+        "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006",
+        "secret": "prueba",
+        "status": "PAUSED",
+        "created_at": "2025-01-30T18:31:22.656Z",
+        "updated_at": "2025-01-30T18:31:22.656Z"
     }
   ]
 }
@@ -54,20 +58,58 @@ Authorization: Bearer <token>
 
 ---
 
-## **2. Crear un webhook**
+## **2. Obtener un webhook específico**
+
+### **Endpoint**
+`GET /webhooks/:id`
+
+### **Descripción**
+Obtiene la información de un webhook específico según su ID.
+
+### **Ejemplo de solicitud**
+```http
+GET /webhooks/d91cfd6c-cb8f-40df-8f3f-142872df2122 HTTP/1.1
+Host: api.example.com
+Authorization: Bearer <token>
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+    "success": true,
+    "data": {
+        "id": "9da82a17-c28a-4a8f-82ba-b3b9bdbca825",
+        "url": "http://localhost:3000/webhooks/challenge_test",
+        "events": [
+            "user.create"
+        ],
+        "secret": "prueba",
+        "status": "ACTIVE",
+        "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006",
+        "created_at": "2025-01-30T18:31:22.656Z",
+        "updated_at": "2025-01-30T18:31:22.656Z"
+    },
+    "pagination": null,
+    "error": null
+}
+```
+
+---
+
+## **3. Crear un webhook**
 
 ### **Endpoint**
 `POST /webhooks`
 
 ### **Descripción**
-Registra un nuevo webhook especificando la URL de destino, los eventos a los que deseas suscribirte y un secreto para la validación de firmas. [Validación de firmas](/docs/webhooks/handle-webhooks)
+Registra un nuevo webhook.
 
-### **Body de la solicitud**
+### **Ejemplo de solicitud**
 ```json
 {
-  "url": "https://example.com/webhook",
-  "events": ["user.create", "loan.create"],
-  "secret": "my-secret-key"
+  "url": "http://localhost:3000/webhooks/challenge_test",
+  "events": ["user.create"],
+  "secret": "prueba"
 }
 ```
 
@@ -77,35 +119,70 @@ Registra un nuevo webhook especificando la URL de destino, los eventos a los que
   "success": true,
   "data": {
     "id": "12345",
-    "url": "https://example.com/webhook",
-    "events": ["user.create", "loan.create"],
+    "url": "http://localhost:3000/webhooks/challenge_test",
+    "events": ["user.create"],
+    "secret": "prueba",
     "status": "PENDING",
+    "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006"
     "created_at": "2025-01-27T10:00:00Z"
   }
 }
 ```
 
-### **Validaciones**
-- La URL debe ser válida y accesible.
-- El array `events` debe contener al menos un evento válido.
-- El campo `secret` es obligatorio y debe ser un string no vacío.
+---
+
+## **4. Actualizar un webhook**
+
+### **Endpoint**
+`PATCH /webhooks/:id`
+
+### **Descripción**
+Permite actualizar un webhook existente. Se pueden modificar **parcialmente** los campos sin afectar los demás.
+
+### **Ejemplo de solicitud**
+```json
+{
+  "url": "http://localhost:3000/challenge_test",
+  "events": ["user.create", "user.update"],
+  "secret": "pruebaa"
+}
+```
+
+### **Ejemplo de respuesta**
+```json
+{
+    "success": true,
+    "data": {
+        "id": "d91cfd6c-cb8f-40df-8f3f-142872df2122",
+        "url": "http://localhost:3000/challenge_test",
+        "events": [
+            "user.create",
+            "user.update"
+        ],
+        "secret": "pruebaa",
+        "status": "ACTIVE",
+        "challenge": "7f4d44b0-17dc-410d-a4dc-7d4527349b9a",
+        "created_at": "2025-01-29T14:13:31.018Z",
+        "updated_at": "2025-01-30T19:03:39.367Z"
+    },
+    "pagination": null,
+    "error": null
+}
+```
 
 ---
 
-## **3. Reintentar el challenge de un webhook**
+## **5. Reintentar el challenge de un webhook**
 
 ### **Endpoint**
 `POST /webhooks/:id/retry-challenge`
 
 ### **Descripción**
-Reintenta el envío del challenge a la URL del webhook para verificar que sea accesible y válido.
-
-### **Parámetro de ruta**
-- `id`: Identificador único del webhook.
+Reintenta el proceso de verificación del webhook enviando un challenge nuevamente.
 
 ### **Ejemplo de solicitud**
 ```http
-POST /webhooks/12345/retry-challenge HTTP/1.1
+POST /webhooks/be19aa21-95e8-4398-a856-e77f211a5cc5/retry-challenge HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
@@ -113,18 +190,16 @@ Authorization: Bearer <token>
 ### **Ejemplo de respuesta**
 ```json
 {
-  "success": true,
-  "message": "Challenge reenviado exitosamente."
+    "success": true,
+    "data": null,
+    "pagination": null,
+    "error": null
 }
 ```
 
-### **Errores posibles**
-- `404 Not Found`: Si el webhook con el ID especificado no existe.
-- `400 Bad Request`: Si la URL del webhook no responde correctamente al challenge.
-
 ---
 
-## **4. Reactivar un webhook pausado**
+## **6. Reactivar un webhook pausado**
 
 ### **Endpoint**
 `POST /webhooks/:id/resume`
@@ -132,12 +207,9 @@ Authorization: Bearer <token>
 ### **Descripción**
 Cambia el estado de un webhook de `PAUSED` a `ACTIVE`.
 
-### **Parámetro de ruta**
-- `id`: Identificador único del webhook.
-
 ### **Ejemplo de solicitud**
 ```http
-POST /webhooks/12345/resume HTTP/1.1
+POST /webhooks/be19aa21-95e8-4398-a856-e77f211a5cc5/resume HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
@@ -145,18 +217,16 @@ Authorization: Bearer <token>
 ### **Ejemplo de respuesta**
 ```json
 {
-  "success": true,
-  "message": "Webhook reactivado exitosamente."
+    "success": true,
+    "data": null,
+    "pagination": null,
+    "error": null
 }
 ```
 
-### **Errores posibles**
-- `404 Not Found`: Si el webhook con el ID especificado no existe.
-- `400 Bad Request`: Si el webhook no está en estado `PAUSED`.
-
 ---
 
-## **5. Eliminar un webhook**
+## **7. Eliminar un webhook**
 
 ### **Endpoint**
 `DELETE /webhooks/:id`
@@ -164,12 +234,9 @@ Authorization: Bearer <token>
 ### **Descripción**
 Elimina un webhook por su ID.
 
-### **Parámetro de ruta**
-- `id`: Identificador único del webhook.
-
 ### **Ejemplo de solicitud**
 ```http
-DELETE /webhooks/12345 HTTP/1.1
+DELETE /webhooks/f7a31ccd-c5d4-4c99-b00a-3c303180dd65 HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
@@ -177,13 +244,12 @@ Authorization: Bearer <token>
 ### **Ejemplo de respuesta**
 ```json
 {
-  "success": true,
-  "message": "Webhook eliminado exitosamente."
+    "success": true,
+    "data": null,
+    "pagination": null,
+    "error": null
 }
 ```
-
-### **Errores posibles**
-- `404 Not Found`: Si el webhook con el ID especificado no existe.
 
 ---
 
