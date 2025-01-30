@@ -4,7 +4,7 @@ Esta guía detalla cómo consultar la información de un préstamo en el sistema
 
 ## Endpoint
 
-`GET /me/loans/loan_id/:loan_id`
+`GET /v1/me/loans/loan_id/:loan_id`
 
 ## Parámetros
 
@@ -26,7 +26,7 @@ Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un toke
 
 ```bash
 curl -X GET \
-  {base_url}/me/loans/loan_id/{loan_id} \
+  {base_url}/v1/me/loans/loan_id/{loan_id} \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json"
 ```
@@ -37,7 +37,7 @@ curl -X GET \
 const fetch = require("node-fetch");
 
 async function getLoan(loanId, token) {
-  const response = await fetch(`${base_url}/me/loans/loan_id/${loanId}`, {
+  const response = await fetch(`${base_url}/v1/me/loans/loan_id/${loanId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
