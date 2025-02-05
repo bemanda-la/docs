@@ -1,0 +1,226 @@
+# Crear Nueva Cobranza para un Préstamo
+
+Este endpoint permite crear una nueva cobranza para un préstamo específico, asociada a un monto y una fecha de pago.
+
+## Endpoint
+
+**POST** `/v1/apps/loans/:loan_id/new_collection`
+
+### Requisitos de Acceso
+
+- **Scope necesario**: `admin`
+- **Autenticación**: Se requiere un token Bearer válido.
+
+Incluye el encabezado `Authorization` en tu solicitud:
+
+```http
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Parámetros
+
+### URL Parameters
+
+- **loan_id:** El identificador único del préstamo.
+
+### Body
+
+```json
+{
+  "amount": number,
+  "pay_date": string
+}
+```
+
+- **amount (obligatorio):** Monto de la cobranza a realizar.
+- **pay_date (obligatorio):** Fecha de pago de la cobranza.
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X POST \
+  {base_url}/v1/apps/loans/{loan_id}/new_collection \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "amount": 5000,
+        "pay_date": "2025-01-20"
+      }'
+
+```
+
+### Usando Node.js
+
+```javascript
+import fetch from "node-fetch";
+
+async function createNewCollection(token, loanId, amount, payDate) {
+  const response = await fetch(
+    `${base_url}/v1/apps/loans/${loanId}/new_collection`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount,
+        pay_date: payDate,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error creating collection: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  console.log(data);
+}
+
+// Ejemplo de uso
+const token = "YOUR_ACCESS_TOKEN";
+const loanId = "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e";
+const amount = 5000;
+const payDate = "2025-01-20";
+
+createNewCollection(token, loanId, amount, payDate).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluirá los detalles del préstamo actualizado con la nueva cobranza.
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "user_id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "application_id": "02f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "product_id": "03f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "currency_id": "ARS",
+    "requested_amount": 50000.0,
+    "interest_rate": 10.5,
+    "penalty_rate": 3.0,
+    "bonus_amount": 5000.0,
+    "bonus_percentage": 10.0,
+    "total_amount": 55000.0,
+    "paid_amount": 5000.0,
+    "balance": 50000.0,
+    "installment_quantity": 12,
+    "requested_date": "2025-01-01",
+    "approved_date": "2025-01-05",
+    "credited_date": "2025-01-10",
+    "last_payment_date": "2025-01-15",
+    "fully_paid_date": null,
+    "status_id": "approved",
+    "other_info": null,
+    "installments": [],
+    "bonus_conditions": [],
+    "audit_logs": [],
+    "product": {
+      /* Detalles del producto */
+    },
+    "status": {
+      /* Detalles del estado */
+    }
+  },
+  "pagination": null,
+  "error": null
+}
+```
+
+### Detalles de los Campos
+
+### Campos Principales
+
+- **success:** Indica si la solicitud fue exitosa.
+- **data:** Lista de préstamos del usuario autenticado.
+- **error:** Detalles del error (si existe).
+- **pagination:** Información de paginación.
+
+## Campos del Préstamo
+
+- **id**: Identificador único del préstamo.
+- **user_id**: Identificador del usuario asociado al préstamo.
+- **application_id**: Identificador de la aplicación asociada al préstamo.
+- **product_id**: Identificador del producto asociado al préstamo.
+- **currency_id**: Moneda del préstamo.
+- **requested_amount**: Monto solicitado del préstamo.
+- **interest_rate**: Tasa de interés anual del préstamo.
+- **penalty_rate**: Tasa de penalización en caso de retraso.
+- **bonus_amount**: Monto del bono otorgado.
+- **bonus_percentage**: Porcentaje de bono aplicado.
+- **total_amount**: Monto total del préstamo (incluyendo el bono).
+- **paid_amount**: Monto pagado hasta el momento.
+- **balance**: Monto pendiente de pago.
+- **installment_quantity**: Número de cuotas asociadas al préstamo.
+- **requested_date**: Fecha de solicitud del préstamo.
+- **approved_date**: Fecha de aprobación del préstamo.
+- **credited_date**: Fecha de acreditación del préstamo.
+- **last_payment_date**: Fecha del último pago realizado.
+- **fully_paid_date**: Fecha en la que se pagó completamente el préstamo (si aplica).
+- **status_id**: Estado actual del préstamo.
+- **other_info**: Información adicional (si aplica).
+- **installments**: Lista de cuotas asociadas al préstamo.
+- **bonus_conditions**: Condiciones asociadas al bono otorgado.
+- **audit_logs**: Registros de auditoría relacionados con el préstamo.
+- **product**: Detalles del producto asociado al préstamo.
+- **status**: Información del estado actual del préstamo:
+  - **id:** Identificador único del estado (e.g., `in_course`).
+  - **name:** Nombre descriptivo del estado.
+  - **description:** Descripción del estado.
+
+### Relaciones
+
+#### Cuotas
+
+- **id:** Identificador único de la cuota.
+- **due_date:** Fecha de vencimiento de la cuota.
+- **due_amount:** Monto debido para la cuota.
+- **paid_amount:** Monto pagado para la cuota.
+- **balance:** Saldo pendiente de la cuota.
+- **number:** Número de la cuota.
+- **status:** Información del estado actual de la cuota:
+  - **id:** Identificador único del estado (e.g., `pending`).
+  - **name:** Nombre descriptivo del estado.
+  - **description:** Descripción del estado.
+
+#### Bonus Conditions
+
+- **id:** Identificador único de la condición.
+- **application_id:** Identificador único de la aplicación asociada.
+- **name:** Nombre descriptivo de la condición de bonificación.
+- **description:** Descripción detallada de la condición.
+- **other_info:** Información adicional relacionada con la condición.
+
+#### Audit Logs
+
+- **id:** Identificador único del registro de auditoría.
+- **loan_id:** Identificador único del préstamo asociado al registro.
+- **user_id:** Identificador único del usuario que realizó la acción (puede ser `null`).
+- **action_id:** Identificador único de la acción realizada.
+- **action_date:** Fecha en la que se realizó la acción.
+- **data:** Información adicional sobre la acción.
+
+#### Product
+
+- **id:** Identificador único del producto.
+- **application_id:** Identificador único de la aplicación asociada al producto.
+- **name:** Nombre descriptivo del producto.
+- **primary_color:** Color principal del producto en formato hexadecimal.
+- **secondary_color:** Color secundario del producto en formato hexadecimal.
+- **description:** Descripción del producto.
+- **image_url:** URL de la imagen asociada al producto (puede ser `null`).
+- **slogan:** Eslogan promocional del producto.
+- **currency_id:** Moneda utilizada por el producto (e.j., `USD`).
+- **category_id:** Identificador único de la categoría del producto.
+- **status_id:** Identificador único del estado del producto.
+- **other_info:** Información adicional relacionada con el producto.

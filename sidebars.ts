@@ -36,7 +36,17 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Préstamos",
       collapsed: false,
-      items: ["loans/index"],
+      items: [
+        "loans/index",
+        "loans/get-loans-by-user_id",
+        "loans/list-loans-by-app_id",
+        "loans/get-installment-details",
+        "loans/get-loan-details",
+        "loans/create-collection",
+        "loans/get-delinquent-users",
+        "loans/get-user-arrears_details",
+        "loans/get-user-arrear_detail-admin",
+      ],
     },
   ],
 };
