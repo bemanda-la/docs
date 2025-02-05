@@ -1,0 +1,117 @@
+# Creación de categorías de productos de créditos
+
+Esta guía detalla cómo poder crear categorías de productos de créditos.
+
+## Endpoint
+
+`POST /v1/loans/apps/product/categories`
+
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+# Cuerpo de la solicitud
+
+El cuerpo de la solicitud debe enviarse en formato JSON con los siguientes parámetros:
+
+```
+{
+  "name": "string",
+  "parent_id": string?
+}
+```
+
+# Parámetros del cuerpo de la solicitud:
+
+- `name`: Nombre de la categoría de producto. Debe ser único dentro de la misma aplicación.
+- `parent_id` (opcional): ID de la categoría padre.
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X POST "{base_url}/v1/loans/apps/product/categories" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"name": "Préstamo personal", "parent_id": null}'
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require("node-fetch");
+
+async function createProductCategories(name, parent_id, token) {
+  const response = await fetch(`${base_url}/v1/loans/apps/product/categories`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name, parent_id }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error creating product category: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  console.log(data);
+}
+
+// Usage example
+const token = "YOUR_ACCESS_TOKEN";
+createProductCategories("Préstamo personal", null, token).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "caaf1da4-d5db-4418-8dce-cc69741d363c",
+    "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+    "name": "Préstamo Personal",
+    "parent_id": null
+  },
+  "pagination": null,
+  "error": null
+}
+```
+
+### Detalles de los Campos
+
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Información de la categoría de producto creada:
+
+  - **id:** Identificador único de la categoría de producto.
+  - **application_id:** ID de la aplicación asociada al usuario autenticado.
+  - **name:** Nombre de la categoría de producto.
+  - **parent_id:** ID de la categoría padre (puede ser null).
+
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **error:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **help:** Enlace a la documentación oficial para obtener más detalles sobre el error.
+- **pagination:** Siempre será null para este endpoint, ya que no es necesario paginar los resultados.
+
+## Notas
+
+- Este endpoint requiere permisos de administrador, por lo que solo los usuarios autenticados con el rol adecuado podrán crear categorías de producto.
+- Si no se proporciona un parent_id, se asume que la categoría es independiente y no tiene una categoría padre.
+- Si el nombre de la categoría tiene espacios adicionales, estos serán eliminados antes de procesarlo.
