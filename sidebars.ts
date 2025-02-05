@@ -36,7 +36,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Préstamos",
       collapsed: false,
-      items: ["loans/index", "loans/product-categories"],
+      items: ["loans/index", "loans/create-product-categories"],
     },
   ],
 };
