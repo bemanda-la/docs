@@ -1,0 +1,145 @@
+# Listado de productos de crédito
+
+Esta guía detalla cómo consultar la información de un listado de productos de crédito, basada en el modelo definido.
+
+## Endpoint
+
+`GET /v1/apps/loans/products`
+
+## Parámetros: Query Params
+
+- `page` (opcional): Número de la página que se desea consultar. Valor por defecto: `1` .
+- `items_per_page` (opcional): Cantidad de elementos por página. Valor por defecto: `50` .
+- `status` (opcional): Filtrar productos por estado: `Available`.
+- `orderByField` (opcional): Campo por el cual se desea ordenar los productos. Valores permitidos: `id`, `status`, `granted_capital`, `inactivation_date`.
+- `orderByDirection` (opcional): Dirección del ordenamiento. Valor por defecto: `desc`: Orden descendente. `asc`: Orden ascendente.
+
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  {base_url}/v1/loans/apps/products' \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require("node-fetch");
+
+async function getProducts(page = 1, itemsPerPage = 50, token, status, orderByField, orderByDirection) {
+  const queryParams = new URLSearchParams({
+    page,
+    items_per_page: itemsPerPage,
+    ...(status && { status }),
+    ...(orderByField && { orderByField }),
+    ...(orderByDirection && { orderByDirection }),
+  }).toString();
+
+  const response = await fetch(`${base_url}/v1/loans/apps/products?${queryParams}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching products: ${response.statusText}`);
+  }
+
+  const productData = await response.json();
+  console.log(productData);
+}
+
+// Usage example
+const page = 1;
+const itemsPerPage = 50;
+const token = "YOUR_ACCESS_TOKEN";
+getProducts(page, itemsPerPage, token, "Available", "status", "asc").catch(console.error);
+
+if (!response.ok) {
+  throw new Error(`Error fetching loan: ${response.statusText}`);
+}
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "20a9ad2e-8867-4242-b9f4-310865db5f82",
+      "status": "Available",
+      "name": "Adelanto inmediato",
+      "granted_capital": 5000,
+      "inactivation_date": null,
+      "interest_rate": "5"
+    },
+    {
+      "id": "20a9ad2e-8867-4242-b9f4-310865db5f83",
+      "status": "Available",
+      "name": "Préstamo Personal",
+      "granted_capital": 10000,
+      "inactivation_date": null,
+      "interest_rate": "4"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "items_per_page": 50,
+    "total_items": 3,
+    "total_pages": 1
+  },
+  "error": null
+}
+```
+
+### Detalles de los Campos
+
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Lista de productos asociados a la aplicación. (detallada abajo).
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Información de paginación de la consulta:
+  - **page**: Página actual de los resultados.
+  - **items_per_page**: Número de elementos por página.
+  - **total_items**: Total de elementos disponibles.
+  - **total_pages**: Total de páginas disponibles.
+
+### Campos del Listado de productos
+
+- **id:** Identificador único del producto.
+- **status:** Información del nombre del estado actual del producto. (Available).
+- **name:** Informacion del nombre del producto.
+- **granted_capital:** Capital otorgado total de los préstamos asociados a este producto.
+- **inactivation_date:** Identificador de la fecha de inactivación del producto, (si aplica).
+- **interest_rate:** Tasa de interés asociada al producto (puede ser null si no aplica).
+
+## Notas
+
+- Este endpoint utiliza el ID de la aplicación asociada al usuario autenticado para filtrar los productos.
+- Si no se especifican los parámetros de paginación, se usan los valores predeterminados (page=1, items_per_page=50).
+- Asegúrate de que el token utilizado tenga los permisos necesarios para acceder a este recurso.
