@@ -24,7 +24,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Webhooks",
       collapsed: false,
-      items: ["webhooks/index", "webhooks/events"],
+      items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
     },
     {
       type: "category",
@@ -36,7 +36,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Préstamos",
       collapsed: false,
-      items: ["loans/index", "loans/list-products"],
+      items: ["loans/index", "loans/list-products", "loans/create-product-categories"],
     },
   ],
 };
