@@ -38,6 +38,12 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: ["loans/index", "loans/list-products", "loans/create-product-categories"],
     },
+    {
+      type: "category",
+      label: "Comunicación",
+      collapsed: false,
+      items: ["campaigns/index"],
+    },
   ],
 };
 
