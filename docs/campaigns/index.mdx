@@ -1,0 +1,147 @@
+# Creación de una nueva campaña
+
+Esta guía detalla cómo crear una nueva campaña en el sistema utilizando el endpoint correspondiente.
+
+## Endpoint
+
+`POST /v1/campaign`
+
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Cuerpo de la Solicitud (Body)
+
+El cuerpo de la solicitud debe ser un objeto JSON con los siguientes campos:
+
+```json
+{
+  "name": "string",
+  "description": "string",
+  "status": "string",
+  "sent_at": "string",
+  "distribution_list_id": "string"
+}
+```
+
+### Detalles de los Campos
+
+- **name (requerido):** Nombre de la campaña.
+- **description (requerido):** Descripción detallada de la campaña.
+- **status (requerido):** Estado actual de la campaña. Debe ser uno de los valores definidos en `CampaignState` (`"DRAFT"`,`"SCHEDULED"`,`"SENDING"`,`"SENT"`,`"CANCELED"`)
+- **sent_at (opcional):** Fecha y hora en que se envió la campaña. Debe estar en formato ISO 8601 (e.g., `"2023-12-01T00:00:00.000Z"`).
+- **distribution_list_id (opcional):** Identificador único de la lista de distribución asociada a la campaña. Si no se proporciona, la campaña no estará asociada a ninguna lista de distribución.
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X POST \
+  {base_url}/v1/campaign \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+      "name": "Campaña de Navidad",
+      "description": "Campaña para promocionar los descuentos de Navidad",
+      "status": "SENT",
+      "sent_at": "2023-12-01T00:00:00.000Z"
+}'
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require("node-fetch");
+
+async function createCampaign(token, campaignData) {
+  const response = await fetch(`${base_url}/v1/campaign`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(campaignData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error creating campaign: ${response.statusText}`);
+  }
+
+  const createdCampaign = await response.json();
+  console.log(createdCampaign);
+}
+
+// Usage example
+const campaignData = {
+  name: "Campaña de Navidad",
+  description: "Campaña para promocionar los descuentos de Navidad",
+  status: "SENT",
+  sent_at: "2023-12-01T00:00:00.000Z",
+};
+
+const token = "YOUR_ACCESS_TOKEN";
+createCampaign(token, campaignData).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "018c0f5b-4d4b-7bde-89a6-6f2a4d60f56e",
+    "application_id": "01f4c5d9-3b6f-7e4a-93b6-2f1a3c50d78f",
+    "name": "Campaña de Navidad",
+    "description": "Campaña para promocionar los descuentos de Navidad",
+    "status": "SENT",
+    "sent_at": "2023-12-01T00:00:00.000Z",
+    "distribution_list_id": null,
+    "created_at": "2023-12-01T10:00:00Z",
+    "updated_at": "2023-12-01T10:00:00Z"
+  },
+  "error": null,
+  "pagination": null
+}
+```
+
+### Detalles de los Campos
+
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Objeto con la información de la campaña creada (detallada abajo).
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Información de paginación, será `null` porque este recurso no es una lista.
+
+### Campos de la Campaña
+
+- **id:** Identificador único de la campaña.
+- **application_id:** Identificador de la aplicación asociada.
+- **name:** Nombre de la campaña.
+- **description:** Descripción de la campaña.
+- **status:** Estado actual de la campaña.
+- **sent_at:** Fecha y hora en que se envió la campaña.
+- **distribution_list_id:** Identificador de la lista de distribución asociada (si aplica).
+- **created_at:** Fecha y hora de creación de la campaña.
+- **updated_at:** Fecha y hora de la última actualización de la campaña.
+
+## Notas
+
+- Asegúrate de que los campos requeridos estén presentes en el cuerpo de la solicitud.
+- El campo `status` debe ser uno de los valores definidos en CampaignState.
+- Si no se proporciona un `distribution_list_id`, la campaña no estará asociada a ninguna lista de distribución.
+- La respuesta incluirá la información de la campaña recién creada, incluyendo su id único.
