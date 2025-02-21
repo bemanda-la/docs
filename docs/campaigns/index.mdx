@@ -4,7 +4,7 @@ Esta guía detalla cómo crear una nueva campaña en el sistema utilizando el en
 
 ## Endpoint
 
-`POST /v1/campaign`
+`POST /v1/campaigns`
 
 ## Autenticación
 
@@ -44,7 +44,7 @@ El cuerpo de la solicitud debe ser un objeto JSON con los siguientes campos:
 
 ```bash
 curl -X POST \
-  {base_url}/v1/campaign \
+  {base_url}/v1/campaigns \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -61,7 +61,7 @@ curl -X POST \
 const fetch = require("node-fetch");
 
 async function createCampaign(token, campaignData) {
-  const response = await fetch(`${base_url}/v1/campaign`, {
+  const response = await fetch(`${base_url}/v1/campaigns`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
