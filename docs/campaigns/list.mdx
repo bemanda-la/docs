@@ -1,0 +1,149 @@
+# Listado de campañas
+
+Esta guía detalla cómo consultar la información de un listado de campañas, basada en el modelo definido.
+
+## Endpoint
+
+`GET /v1/campaigns`
+
+## Parámetros: Query Params
+
+- `page` (opcional): Número de la página que se desea consultar. Valor por defecto: `1` .
+- `items_per_page` (opcional): Cantidad de elementos por página. Valor por defecto: `10` .
+- `orderBy (opcional)`: Campo y dirección de ordenamiento. Formato: `campo:asc` o `campo:desc`. Ejemplo: `name:asc`.
+- `status` (opcional): Filtrar campañas por estado. Valores permitidos: `"DRAFT"`,`"SCHEDULED"`,`"SENDING"`,`"SENT"`,`"CANCELED"`.
+
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  '{base_url}/v1/campaigns?page=1&items_per_page=10&status=SENT&orderBy=name:asc' \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require("node-fetch");
+
+async function getCampaigns(page = 1, itemsPerPage = 10, token, status, orderBy) {
+  const queryParams = new URLSearchParams({
+    page,
+    items_per_page: itemsPerPage,
+    ...(status && { status }),
+    ...(orderBy && { orderBy }),
+  }).toString();
+
+  const response = await fetch(`${base_url}/v1/campaigns?${queryParams}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching campaigns: ${response.statusText}`);
+  }
+
+  const campaignData = await response.json();
+  console.log(campaignData);
+}
+
+// Usage example
+const page = 1;
+const itemsPerPage = 10;
+const token = "YOUR_ACCESS_TOKEN";
+getCampaigns(page, itemsPerPage, token, "SENT", "name:asc").catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "83b3770e-9fe0-4e09-b7d1-e9f2e040810e",
+      "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+      "name": "Campaña de Navidad",
+      "description": "Campaña para promocionar los descuentos de Navidad",
+      "status": "SENT",
+      "sent_at": "2023-12-01T00:00:00.000Z",
+      "distribution_list_id": null,
+      "created_at": "2025-02-20T19:11:33.921Z",
+      "updated_at": "2025-02-20T19:11:33.921Z"
+    },
+    {
+      "id": "e198e442-2f6b-4985-838f-8aaa4dcc5eee",
+      "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+      "name": "Zootopia",
+      "description": "Campaña para promocionar accesorios para tu mascota",
+      "status": "DRAFT",
+      "sent_at": "2023-12-01T00:00:00.000Z",
+      "distribution_list_id": null,
+      "created_at": "2025-02-20T19:39:06.066Z",
+      "updated_at": "2025-02-20T19:39:06.066Z"
+    }
+  ],
+  "pagination": {
+    "total_items": 2,
+    "total_pages": 1,
+    "page": 1,
+    "items_per_page": 10
+  },
+  "error": null
+}
+```
+
+### Detalles de los Campos
+
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Lista de campañas asociadas a la aplicación. (detallada abajo).
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Información de paginación de la consulta:
+  - **page:** Página actual de los resultados.
+  - **items_per_page:** Número de elementos por página.
+  - **total_items:** Total de elementos disponibles.
+  - **total_pages:** Total de páginas disponibles.
+
+### Campos del listado de campañas
+
+- **id:** Identificador único de la campaña.
+- **application_id:** Identificador de la aplicación asociada.
+- **name:** Nombre de la campaña.
+- **description:** Descripción de la campaña.
+- **status:** Estado actual de la campaña.
+- **sent_at:** Fecha y hora en que se envió la campaña.
+- **distribution_list_id:** Identificador de la lista de distribución asociada (si aplica).
+- **created_at:** Fecha y hora de creación de la campaña.
+- **updated_at:** Fecha y hora de la última actualización de la campaña.
+
+## Notas
+
+- Este endpoint utiliza el ID de la aplicación asociada al usuario autenticado para filtrar las campañas
+- El campo `status` (opcional) para filtrar campañas por status, debe ser uno de los valores definidos en CampaignState (`"DRAFT"`,`"SCHEDULED"`,`"SENDING"`,`"SENT"`,`"CANCELED"`).
+- Si no se especifican los parámetros de paginación, se usan los valores predeterminados (`page=1`, `items_per_page=10`).
+- Asegúrate de que el token utilizado tenga los permisos necesarios para acceder a este recurso.
