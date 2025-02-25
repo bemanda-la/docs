@@ -42,7 +42,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Comunicación",
       collapsed: false,
-      items: ["campaigns/index", "campaigns/list"],
+      items: ["campaigns/index", "campaigns/list", "campaigns/id", "campaigns/id-analytics", "campaigns/id-emails"],
     },
   ],
 };

@@ -1,0 +1,114 @@
+# Obtener una campaña por ID
+
+Esta guía explica cómo consultar la información de una campaña específica utilizando su identificador único.
+
+## Endpoint
+
+`GET /v1/campaigns/:campaign_id`
+
+## Parámetros de ruta
+
+- `campaign_id` (requerido): Identificador único de la campaña que se desea consultar.
+
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  '{base_url}/v1/campaigns/:campaign_id' \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require("node-fetch");
+
+async function getCampaign(campaign_id, token) {
+  const response = await fetch(`${base_url}/v1/campaigns/${campaign_id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching campaign: ${response.statusText}`);
+  }
+
+  const campaignData = await response.json();
+  console.log(campaignData);
+}
+
+// Usage example
+const campaign_id = "YOUR_CAMPAIGN_ID";
+const token = "YOUR_ACCESS_TOKEN";
+getCampaign(campaign_id, token).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "83b3770e-9fe0-4e09-b7d1-e9f2e040810e",
+    "application_id": "01917166-b939-7ffc-8b21-13294c183d8e",
+    "name": "Campaña de Navidad",
+    "description": "Campaña para promocionar los descuentos de Navidad",
+    "status": "SENT",
+    "sent_at": "2023-12-01T00:00:00.000Z",
+    "distribution_list_id": null,
+    "created_at": "2025-02-20T19:11:33.921Z",
+    "updated_at": "2025-02-20T19:11:33.921Z"
+  },
+  "error": null,
+  "pagination": null
+}
+```
+
+### Detalles de los Campos
+
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Objeto que contiene la información de la campaña solicitada.
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Siempre será null para este endpoint, ya que no es necesario paginar los resultados.
+
+### Campos del objeto `data`
+
+- **id:** Identificador único de la campaña.
+- **application_id:** Identificador de la aplicación asociada.
+- **name:** Nombre de la campaña.
+- **description:** Descripción de la campaña.
+- **status:** Estado actual de la campaña.
+- **sent_at:** Fecha y hora en que se envió la campaña.
+- **distribution_list_id:** Identificador de la lista de distribución asociada (si aplica).
+- **created_at:** Fecha y hora de creación de la campaña.
+- **updated_at:** Fecha y hora de la última actualización de la campaña.
+
+## Notas
+
+- Este endpoint utiliza el ID de la campaña proporcionado en la ruta para recuperar la información de la campaña específica.
+- Asegúrate de que el token utilizado tenga los permisos necesarios para acceder a este recurso.
