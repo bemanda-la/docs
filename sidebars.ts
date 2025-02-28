@@ -30,7 +30,7 @@ const sidebars: SidebarsConfig = {
       type: "category",
       label: "Usuarios",
       collapsed: false,
-      items: ["users/index"],
+      items: ["users/index", "users/edit-admin"],
     },
     {
       type: "category",
