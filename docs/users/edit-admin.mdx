@@ -6,16 +6,6 @@ Esta guía detalla cómo actualizar la información de un usuario en el sistema 
 
 `PATCH /v1/user/:user_id`
 
-## Autenticación
-
-Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
-
-```
-Authorization: Bearer <tu_token>
-```
-
-Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
-
 ## Parámetros
 
 - `user_id` (path): Identificador único del usuario en formato UUID.
@@ -51,7 +41,6 @@ El cuerpo de la solicitud debe ser un objeto JSON con los siguientes campos:
 ```bash
 curl -X PATCH \
   {base_url}/v1/user/:user_id \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "first_name": "Juan",
@@ -68,11 +57,10 @@ curl -X PATCH \
 ```javascript
 const fetch = require("node-fetch");
 
-async function updateUser(user_id, token, updateData) {
+async function updateUser(user_id, updateData) {
   const response = await fetch(`${base_url}/v1/user/${user_id}`, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(updateData),
@@ -88,7 +76,6 @@ async function updateUser(user_id, token, updateData) {
 
 // Ejemplo de uso
 const user_id = "YOUR_USER_ID";
-const token = "YOUR_ACCESS_TOKEN";
 const updateData = {
   first_name: "Juan",
   last_name: "Pérez",
@@ -98,7 +85,7 @@ const updateData = {
   photo_uri: "https://example.com/photo.jpg",
 };
 
-updateUser(user_id, token, updateData).catch(console.error);
+updateUser(user_id, updateData).catch(console.error);
 ```
 
 ## Respuesta
@@ -144,7 +131,6 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
 
 - Todos los campos en el cuerpo de la petición son opcionales. Solo se actualizarán los valores proporcionados.
 - Asegúrate de que el `user_id` corresponde a un usuario existente antes de realizar la consulta.
-- Para validar la autenticidad de las solicitudes, utiliza las firmas digitales incluidas en los encabezados del webhook.
 - Si un valor no cumple con las validaciones establecidas, la solicitud fallará con un error `400 Bad Request`.
 - La fecha de nacimiento (`birthdate`) debe estar en formato `YYYY-MM-DD`. Si es válida, se convertirá a formato ISO (`YYYY-MM-DDTHH:MM:SS.sssZ`).
 - `photo_uri` debe ser una URL válida.
