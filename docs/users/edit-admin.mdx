@@ -4,7 +4,7 @@ Esta guía detalla cómo actualizar la información de un usuario en el sistema 
 
 ## Endpoint
 
-`PATCH /v1/user/:user_id`
+`PATCH /v1/users/:user_id`
 
 ## Parámetros
 
@@ -40,7 +40,7 @@ El cuerpo de la solicitud debe ser un objeto JSON con los siguientes campos:
 
 ```bash
 curl -X PATCH \
-  {base_url}/v1/user/:user_id \
+  {base_url}/v1/users/:user_id \
   -H "Content-Type: application/json" \
   -d '{
     "first_name": "Juan",
@@ -58,7 +58,7 @@ curl -X PATCH \
 const fetch = require("node-fetch");
 
 async function updateUser(user_id, updateData) {
-  const response = await fetch(`${base_url}/v1/user/${user_id}`, {
+  const response = await fetch(`${base_url}/v1/users/${user_id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
