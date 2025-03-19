@@ -17,40 +17,44 @@ Los webhooks pueden estar en uno de los siguientes estados:
 ## **1. Obtener todos los webhooks**
 
 ### **Endpoint**
-`GET /webhooks`
+
+`GET /v1/webhooks`
 
 ### **Descripción**
+
 Este endpoint devuelve una lista de todos los webhooks registrados en tu cuenta.
 
 ### **Ejemplo de solicitud**
+
 ```http
-GET /webhooks HTTP/1.1
+GET /v1/webhooks HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
   "success": true,
   "data": [
     {
-        "id": "d91cfd6c-cb8f-40df-8f3f-142872df2122",
-        "url": "http://localhost:3000/challenge_test",
-        "challenge": "7f4d44b0-17dc-410d-a4dc-7d4527349b9a",
-        "secret": "pruebaa",
-        "status": "ACTIVE",
-        "created_at": "2025-01-29T14:13:31.018Z",
-        "updated_at": "2025-01-30T18:24:15.384Z"
+      "id": "d91cfd6c-cb8f-40df-8f3f-142872df2122",
+      "url": "http://localhost:3000/v1/challenge_test",
+      "challenge": "7f4d44b0-17dc-410d-a4dc-7d4527349b9a",
+      "secret": "pruebaa",
+      "status": "ACTIVE",
+      "created_at": "2025-01-29T14:13:31.018Z",
+      "updated_at": "2025-01-30T18:24:15.384Z"
     },
     {
-        "id": "9da82a17-c28a-4a8f-82ba-b3b9bdbca825",
-        "url": "http://localhost:3000/webhooks/challenge_test",
-        "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006",
-        "secret": "prueba",
-        "status": "PAUSED",
-        "created_at": "2025-01-30T18:31:22.656Z",
-        "updated_at": "2025-01-30T18:31:22.656Z"
+      "id": "9da82a17-c28a-4a8f-82ba-b3b9bdbca825",
+      "url": "http://localhost:3000/v1/webhooks/challenge_test",
+      "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006",
+      "secret": "prueba",
+      "status": "PAUSED",
+      "created_at": "2025-01-30T18:31:22.656Z",
+      "updated_at": "2025-01-30T18:31:22.656Z"
     }
   ]
 }
@@ -61,36 +65,38 @@ Authorization: Bearer <token>
 ## **2. Obtener un webhook específico**
 
 ### **Endpoint**
-`GET /webhooks/:id`
+
+`GET /v1/webhooks/:id`
 
 ### **Descripción**
+
 Obtiene la información de un webhook específico según su ID.
 
 ### **Ejemplo de solicitud**
+
 ```http
-GET /webhooks/d91cfd6c-cb8f-40df-8f3f-142872df2122 HTTP/1.1
+GET /v1/webhooks/d91cfd6c-cb8f-40df-8f3f-142872df2122 HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
-    "success": true,
-    "data": {
-        "id": "9da82a17-c28a-4a8f-82ba-b3b9bdbca825",
-        "url": "http://localhost:3000/webhooks/challenge_test",
-        "events": [
-            "user.create"
-        ],
-        "secret": "prueba",
-        "status": "ACTIVE",
-        "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006",
-        "created_at": "2025-01-30T18:31:22.656Z",
-        "updated_at": "2025-01-30T18:31:22.656Z"
-    },
-    "pagination": null,
-    "error": null
+  "success": true,
+  "data": {
+    "id": "9da82a17-c28a-4a8f-82ba-b3b9bdbca825",
+    "url": "http://localhost:3000/v1/webhooks/challenge_test",
+    "events": ["user.create"],
+    "secret": "prueba",
+    "status": "ACTIVE",
+    "challenge": "52ba0b3f-27a7-4303-b4a7-13a89b434006",
+    "created_at": "2025-01-30T18:31:22.656Z",
+    "updated_at": "2025-01-30T18:31:22.656Z"
+  },
+  "pagination": null,
+  "error": null
 }
 ```
 
@@ -99,27 +105,31 @@ Authorization: Bearer <token>
 ## **3. Crear un webhook**
 
 ### **Endpoint**
-`POST /webhooks`
+
+`POST /v1/webhooks`
 
 ### **Descripción**
+
 Registra un nuevo webhook.
 
 ### **Ejemplo de solicitud**
+
 ```json
 {
-  "url": "http://localhost:3000/webhooks/challenge_test",
+  "url": "http://localhost:3000/v1/webhooks/challenge_test",
   "events": ["user.create"],
   "secret": "prueba"
 }
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
   "success": true,
   "data": {
     "id": "12345",
-    "url": "http://localhost:3000/webhooks/challenge_test",
+    "url": "http://localhost:3000/v1/webhooks/challenge_test",
     "events": ["user.create"],
     "secret": "prueba",
     "status": "PENDING",
@@ -134,39 +144,40 @@ Registra un nuevo webhook.
 ## **4. Actualizar un webhook**
 
 ### **Endpoint**
-`PATCH /webhooks/:id`
+
+`PATCH /v1/webhooks/:id`
 
 ### **Descripción**
+
 Permite actualizar un webhook existente. Se pueden modificar **parcialmente** los campos sin afectar los demás.
 
 ### **Ejemplo de solicitud**
+
 ```json
 {
-  "url": "http://localhost:3000/challenge_test",
+  "url": "http://localhost:3000/v1/challenge_test",
   "events": ["user.create", "user.update"],
   "secret": "pruebaa"
 }
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
-    "success": true,
-    "data": {
-        "id": "d91cfd6c-cb8f-40df-8f3f-142872df2122",
-        "url": "http://localhost:3000/challenge_test",
-        "events": [
-            "user.create",
-            "user.update"
-        ],
-        "secret": "pruebaa",
-        "status": "ACTIVE",
-        "challenge": "7f4d44b0-17dc-410d-a4dc-7d4527349b9a",
-        "created_at": "2025-01-29T14:13:31.018Z",
-        "updated_at": "2025-01-30T19:03:39.367Z"
-    },
-    "pagination": null,
-    "error": null
+  "success": true,
+  "data": {
+    "id": "d91cfd6c-cb8f-40df-8f3f-142872df2122",
+    "url": "http://localhost:3000/v1/challenge_test",
+    "events": ["user.create", "user.update"],
+    "secret": "pruebaa",
+    "status": "ACTIVE",
+    "challenge": "7f4d44b0-17dc-410d-a4dc-7d4527349b9a",
+    "created_at": "2025-01-29T14:13:31.018Z",
+    "updated_at": "2025-01-30T19:03:39.367Z"
+  },
+  "pagination": null,
+  "error": null
 }
 ```
 
@@ -175,25 +186,29 @@ Permite actualizar un webhook existente. Se pueden modificar **parcialmente** lo
 ## **5. Reintentar el challenge de un webhook**
 
 ### **Endpoint**
-`POST /webhooks/:id/retry-challenge`
+
+`POST /v1/webhooks/:id/retry-challenge`
 
 ### **Descripción**
+
 Reintenta el proceso de verificación del webhook enviando un challenge nuevamente.
 
 ### **Ejemplo de solicitud**
+
 ```http
-POST /webhooks/be19aa21-95e8-4398-a856-e77f211a5cc5/retry-challenge HTTP/1.1
+POST /v1/webhooks/be19aa21-95e8-4398-a856-e77f211a5cc5/retry-challenge HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
-    "success": true,
-    "data": null,
-    "pagination": null,
-    "error": null
+  "success": true,
+  "data": null,
+  "pagination": null,
+  "error": null
 }
 ```
 
@@ -202,25 +217,29 @@ Authorization: Bearer <token>
 ## **6. Reactivar un webhook pausado**
 
 ### **Endpoint**
-`POST /webhooks/:id/resume`
+
+`POST /v1/webhooks/:id/resume`
 
 ### **Descripción**
+
 Cambia el estado de un webhook de `PAUSED` a `ACTIVE`.
 
 ### **Ejemplo de solicitud**
+
 ```http
-POST /webhooks/be19aa21-95e8-4398-a856-e77f211a5cc5/resume HTTP/1.1
+POST /v1/webhooks/be19aa21-95e8-4398-a856-e77f211a5cc5/resume HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
-    "success": true,
-    "data": null,
-    "pagination": null,
-    "error": null
+  "success": true,
+  "data": null,
+  "pagination": null,
+  "error": null
 }
 ```
 
@@ -229,25 +248,29 @@ Authorization: Bearer <token>
 ## **7. Eliminar un webhook**
 
 ### **Endpoint**
-`DELETE /webhooks/:id`
+
+`DELETE /v1/webhooks/:id`
 
 ### **Descripción**
+
 Elimina un webhook por su ID.
 
 ### **Ejemplo de solicitud**
+
 ```http
-DELETE /webhooks/f7a31ccd-c5d4-4c99-b00a-3c303180dd65 HTTP/1.1
+DELETE /v1/webhooks/f7a31ccd-c5d4-4c99-b00a-3c303180dd65 HTTP/1.1
 Host: api.example.com
 Authorization: Bearer <token>
 ```
 
 ### **Ejemplo de respuesta**
+
 ```json
 {
-    "success": true,
-    "data": null,
-    "pagination": null,
-    "error": null
+  "success": true,
+  "data": null,
+  "pagination": null,
+  "error": null
 }
 ```
 
@@ -263,4 +286,3 @@ Authorization: Bearer <token>
 ---
 
 Para más información sobre cómo configurar los webhooks y sus validaciones, consulta nuestra [guía principal de webhooks](/docs/webhooks/).
-
