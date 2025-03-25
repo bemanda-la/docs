@@ -19,35 +19,40 @@ const sidebars: SidebarsConfig = {
   // Grouping Webhooks
   guides: [
     "intro",
-    "authentication/index",
     {
       type: "category",
       label: "Primeros Pasos",
       collapsed: false,
-      items: [],
+      items: ["primerospasos/index", "primerospasos/signup", "primerospasos/login", "primerospasos/app"],
+    },
+    {
+      type: "category",
+      label: "Autenticación",
+      collapsed: true,
+      items: ["authentication/index"],
     },
     {
       type: "category",
       label: "Webhooks",
-      collapsed: false,
+      collapsed: true,
       items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
     },
     {
       type: "category",
       label: "Usuarios",
-      collapsed: false,
+      collapsed: true,
       items: ["users/index"],
     },
     {
       type: "category",
       label: "Préstamos",
-      collapsed: false,
+      collapsed: true,
       items: ["loans/index"],
     },
     {
       type: "category",
       label: "Comunicación",
-      collapsed: false,
+      collapsed: true,
       items: ["campaigns/index", "campaigns/list", "campaigns/id", "campaigns/id-analytics", "campaigns/id-emails"],
     },
   ],
