@@ -22,6 +22,12 @@ const sidebars: SidebarsConfig = {
     "authentication/index",
     {
       type: "category",
+      label: "Primeros Pasos",
+      collapsed: false,
+      items: [],
+    },
+    {
+      type: "category",
       label: "Webhooks",
       collapsed: false,
       items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
