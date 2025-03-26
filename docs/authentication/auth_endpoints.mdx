@@ -1,0 +1,53 @@
+
+# Endpoints
+
+**URL del endpoint:**
+```
+POST /v1/oauth/token
+```
+
+**Encabezados Requeridos:**
+```
+Content-Type: application/x-www-form-urlencoded
+```
+
+**Parámetros:**
+| Nombre | Tipo | Descripción |
+| --- | --- | --- |
+| `client_id` | `string` | Identificador de la aplicación. |
+| `client_secret` | `string` | Clave secreta de la aplicación. |
+| `grant_type` | `string` | Debe ser `client_credentials`. |
+
+### Ejemplo de Solicitud
+
+```bash
+curl -X POST \
+  {url_base}/v1/oauth/token \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -d 'client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&grant_type=client_credentials'
+```
+
+### Respuesta Esperada
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5...",
+  "token_type": "Bearer",
+  "expires_in": 3600
+}
+```
+
+## Manejo de Errores
+
+Si la solicitud de autenticación falla, se devuelve una respuesta con un código de error y una descripción detallada. Los errores más comunes incluyen credenciales inválidas o solicitudes mal formadas.
+
+**Ejemplo de Error:**
+```json
+{
+  "error": "invalid_client",
+  "error_description": "Client authentication failed"
+}
+```
+
+Asegúrese de revisar cuidadosamente las credenciales y el formato de la solicitud antes de reenviarla.
+

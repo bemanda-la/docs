@@ -79,28 +79,13 @@ const config: Config = {
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "Docs",
       logo: {
-        alt: "Manda Logo",
-        src: "img/logo.svg",
+        alt: 'Manda Logo',
+        src: 'img/logo.svg',
       },
-      items: [
-        {
-          type: "docSidebar",
-          sidebarId: "guides",
-          position: "left",
-          label: "Guías",
-        },
-        // { to: "/blog", label: "Blog", position: "left" },
-        // {
-        //   href: "https://github.com/facebook/docusaurus",
-        //   label: "GitHub",
-        //   position: "right",
-        // },
-      ],
     },
     footer: {
-      style: "dark",
+      style: 'dark',
       links: [
         // {
         //   title: "Docs",
@@ -147,6 +132,17 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+    },
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      },
+    },
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: true,
     },
   } satisfies Preset.ThemeConfig,
 };

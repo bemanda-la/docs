@@ -1,6 +1,6 @@
-# Consulta de Préstamo por ID
+# Consulta de Crédito por ID
 
-Esta guía detalla cómo consultar la información de un préstamo en el sistema utilizando su ID, basada en el modelo definido.
+Esta guía detalla cómo consultar la información de un crédito en el sistema utilizando su ID, basada en el modelo definido.
 
 ## Endpoint
 
@@ -8,7 +8,7 @@ Esta guía detalla cómo consultar la información de un préstamo en el sistema
 
 ## Parámetros
 
-- `loan_id` (path): Identificador único del préstamo en formato UUID.
+- `loan_id` (path): Identificador único del crédito  en formato UUID.
 
 ## Autenticación
 
@@ -91,7 +91,7 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
     "status": {
       "id": "in_course",
       "name": "In Course",
-      "description": "El préstamo está en curso."
+      "description": "El crédito está en curso."
     },
     "installments": [
       {
@@ -116,7 +116,7 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
 
 ### Detalles de los Campos
 - **success:** Indica si la solicitud fue exitosa (`true` o `false`).
-- **data:** Objeto con la información del préstamo (detallada abajo).
+- **data:** Objeto con la información del crédito (detallada abajo).
 - **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
   - **code:** Código del error.
   - **message:** Mensaje general del error.
@@ -125,27 +125,27 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
     - **location:** Ubicación del error.
 - **pagination:** Información de paginación, será `null` porque este recurso no es una lista.
 
-### Campos del Préstamo
-- **id:** Identificador único del préstamo.
-- **user_id:** Identificador único del usuario asociado al préstamo.
+### Campos del Crédito
+- **id:** Identificador único del crédito.
+- **user_id:** Identificador único del usuario asociado al crédito.
 - **application_id:** Identificador de la aplicación asociada.
 - **product_id:** Identificador del producto financiero asociado.
-- **currency_id:** Identificador de la moneda del préstamo.
+- **currency_id:** Identificador de la moneda del crédito.
 - **requested_amount:** Monto solicitado por el usuario.
-- **interest_rate:** Tasa de interés aplicada al préstamo.
+- **interest_rate:** Tasa de interés aplicada al crédito.
 - **penalty_rate:** Tasa de penalización por incumplimiento.
-- **bonus_amount:** Monto del bono asociado al préstamo.
-- **bonus_percentage:** Porcentaje del bono sobre el préstamo.
-- **total_amount:** Monto total del préstamo, incluyendo intereses y bonos.
+- **bonus_amount:** Monto del bono asociado al crédito.
+- **bonus_percentage:** Porcentaje del bono sobre el crédito.
+- **total_amount:** Monto total del crédito, incluyendo intereses y bonos.
 - **paid_amount:** Monto pagado hasta el momento.
-- **balance:** Saldo pendiente del préstamo.
-- **installment_quantity:** Cantidad total de cuotas del préstamo.
-- **requested_date:** Fecha en la que se solicitó el préstamo.
-- **approved_date:** Fecha en la que se aprobó el préstamo.
+- **balance:** Saldo pendiente del crédito.
+- **installment_quantity:** Cantidad total de cuotas del crédito.
+- **requested_date:** Fecha en la que se solicitó el crédito.
+- **approved_date:** Fecha en la que se aprobó el crédito.
 - **credited_date:** Fecha en la que se acreditaron los fondos.
 - **last_payment_date:** Fecha del último pago realizado.
-- **fully_paid_date:** Fecha en la que se completó el pago del préstamo (si aplica).
-- **status:** Información del estado actual del préstamo:
+- **fully_paid_date:** Fecha en la que se completó el pago del crédito (si aplica).
+- **status:** Información del estado actual del crédito:
   - **id:** Identificador único del estado (e.g., `in_course`).
   - **name:** Nombre descriptivo del estado.
   - **description:** Descripción del estado.
@@ -165,6 +165,6 @@ La respuesta incluye la estructura estándar para los recursos, con los siguient
 
 ## Notas
 
-- Asegúrate de que el `loan_id` corresponde a un préstamo existente antes de realizar la consulta.
+- Asegúrate de que el `loan_id` corresponde a un crédito existente antes de realizar la consulta.
 - Para validar la autenticidad de las solicitudes, utiliza las firmas digitales incluidas en los encabezados del webhook.
-- La respuesta puede incluir información adicional relevante según el contexto del préstamo.
+- La respuesta puede incluir información adicional relevante según el contexto del crédito.

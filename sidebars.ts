@@ -18,7 +18,6 @@ const sidebars: SidebarsConfig = {
 
   // Grouping Webhooks
   guides: [
-    "intro",
     {
       type: "category",
       label: "Primeros Pasos",
@@ -27,33 +26,60 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: "category",
-      label: "Autenticación",
-      collapsed: true,
-      items: ["authentication/index"],
+      label: "Navegación",
+      collapsed: false,
+      items: [
+        "sections/index",
+        {
+          type: "category",
+          label: "Gestión",
+          collapsed: true,
+          items: ["sections/admin/dashboard", "sections/admin/usuarios", "sections/admin/colaboradores", "sections/admin/cuentas", "sections/admin/creditos", "sections/admin/suscripciones", "sections/admin/cobranzas", "sections/admin/campanas"],
+        },
+        {
+          type: "category",
+          label: "Setup",
+          collapsed: true,
+          items: ["sections/setup/app", "sections/setup/branding", "sections/setup/creditos", "sections/setup/scoring", "sections/setup/wallet"],
+        },],
     },
-    {
-      type: "category",
-      label: "Webhooks",
-      collapsed: true,
-      items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
-    },
-    {
-      type: "category",
-      label: "Usuarios",
-      collapsed: true,
-      items: ["users/index"],
-    },
-    {
-      type: "category",
-      label: "Préstamos",
-      collapsed: true,
-      items: ["loans/index"],
-    },
-    {
-      type: "category",
-      label: "Comunicación",
-      collapsed: true,
-      items: ["campaigns/index", "campaigns/list", "campaigns/id", "campaigns/id-analytics", "campaigns/id-emails"],
+    { type: "category",
+      label: "Documentacion APIs",
+      collapsed: false,
+      items: [
+          "intro",
+          "modules",
+          {
+          type: "category",
+          label: "Autenticación",
+          collapsed: true,
+          items: ["authentication/index", "authentication/auth_endpoints"],
+        },
+        {
+          type: "category",
+          label: "Webhooks",
+          collapsed: true,
+          items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
+        },
+        {
+          type: "category",
+          label: "Usuarios",
+          collapsed: true,
+          items: ["users/index", "users/users_endpoints"],
+        },
+        {
+          type: "category",
+          label: "Créditos",
+          collapsed: true,
+          items: ["loans/index"],
+        },
+        {
+          type: "category",
+          label: "Notificaciones",
+          collapsed: true,
+          items: ["campaigns/index", "campaigns/list", "campaigns/id", "campaigns/id-analytics", "campaigns/id-emails"],
+        }
+    ],
     },
   ],
 };
