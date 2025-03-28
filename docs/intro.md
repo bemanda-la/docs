@@ -1,4 +1,4 @@
-# Introducción
+# Introducción 
 
 La API de Manda permite a las empresas integrar servicios financieros embebidos en sus plataformas de forma sencilla y segura. A través de esta API, se facilita la interacción con nuestros servicios.
 
