@@ -40,7 +40,18 @@ const sidebars: SidebarsConfig = {
           type: "category",
           label: "Setup",
           collapsed: true,
-          items: ["sections/setup/app", "sections/setup/branding", "sections/setup/creditos", "sections/setup/scoring", "sections/setup/wallet"],
+          items: [
+            {
+              type: "category",
+              label: "App",
+              collapsed: true,
+              items: [
+                "sections/setup/app/home", 
+                "sections/setup/app/branding", 
+                "sections/setup/app/navbar"
+              ],
+            },
+            "sections/setup/creditos", "sections/setup/scoring", "sections/setup/wallet"],
         },],
     },
     { type: "category",
