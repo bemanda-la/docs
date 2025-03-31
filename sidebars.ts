@@ -29,7 +29,6 @@ const sidebars: SidebarsConfig = {
       label: "Navegación",
       collapsed: false,
       items: [
-        "sections/index",
         {
           type: "category",
           label: "Gestión",
