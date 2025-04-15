@@ -1,4 +1,4 @@
-import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -19,77 +19,106 @@ const sidebars: SidebarsConfig = {
   // Grouping Webhooks
   guides: [
     {
-      type: "category",
-      label: "Primeros Pasos",
+      type: 'category',
+      label: 'Primeros Pasos',
       collapsed: false,
-      items: ["primerospasos/index", "primerospasos/signup", "primerospasos/login", "primerospasos/app"],
+      items: [
+        'primerospasos/index',
+        'primerospasos/signup',
+        'primerospasos/login',
+        'primerospasos/app',
+      ],
     },
     {
-      type: "category",
-      label: "Navegación",
+      type: 'category',
+      label: 'Navegación',
       collapsed: false,
       items: [
         {
-          type: "category",
-          label: "Gestión",
+          type: 'category',
+          label: 'Gestión',
           collapsed: true,
-          items: ["sections/admin/dashboard", "sections/admin/usuarios", "sections/admin/colaboradores", "sections/admin/cuentas", "sections/admin/creditos", "sections/admin/suscripciones", "sections/admin/cobranzas", "sections/admin/campanas"],
+          items: [
+            'sections/admin/dashboard',
+            'sections/admin/usuarios',
+            'sections/admin/colaboradores',
+            'sections/admin/cuentas',
+            'sections/admin/creditos',
+            'sections/admin/suscripciones',
+            'sections/admin/cobranzas',
+            'sections/admin/campanas',
+          ],
         },
         {
-          type: "category",
-          label: "Setup",
+          type: 'category',
+          label: 'Setup',
           collapsed: true,
           items: [
             {
-              type: "category",
-              label: "App",
+              type: 'category',
+              label: 'App',
               collapsed: true,
               items: [
-                "sections/setup/app/home", 
-                "sections/setup/app/branding", 
-                "sections/setup/app/navbar"
+                'sections/setup/app/home',
+                'sections/setup/app/branding',
+                'sections/setup/app/navbar',
               ],
             },
-            "sections/setup/creditos", "sections/setup/scoring", "sections/setup/wallet"],
-        },],
+            'sections/setup/creditos',
+            'sections/setup/scoring',
+            'sections/setup/wallet',
+          ],
+        },
+      ],
     },
-    { type: "category",
-      label: "Documentacion APIs",
+    {
+      type: 'category',
+      label: 'Documentacion APIs',
       collapsed: false,
       items: [
-          "intro",
-          "modules",
-          {
-          type: "category",
-          label: "Autenticación",
+        'intro',
+        'modules',
+        {
+          type: 'category',
+          label: 'Autenticación',
           collapsed: true,
-          items: ["authentication/index", "authentication/auth_endpoints"],
+          items: ['authentication/index', 'authentication/auth_endpoints'],
         },
         {
-          type: "category",
-          label: "Webhooks",
+          type: 'category',
+          label: 'Webhooks',
           collapsed: true,
-          items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
+          items: [
+            'webhooks/index',
+            'webhooks/handle-webhooks',
+            'webhooks/events',
+          ],
         },
         {
-          type: "category",
-          label: "Usuarios",
+          type: 'category',
+          label: 'Usuarios',
           collapsed: true,
-          items: ["users/index", "users/users_endpoints"],
+          items: ['users/index', 'users/users_endpoints'],
         },
         {
-          type: "category",
-          label: "Créditos",
+          type: 'category',
+          label: 'Créditos',
           collapsed: true,
-          items: ["loans/index"],
+          items: ['loans/index', 'loans/list'],
         },
         {
-          type: "category",
-          label: "Notificaciones",
+          type: 'category',
+          label: 'Notificaciones',
           collapsed: true,
-          items: ["campaigns/index", "campaigns/list", "campaigns/id", "campaigns/id-analytics", "campaigns/id-emails"],
-        }
-    ],
+          items: [
+            'campaigns/index',
+            'campaigns/list',
+            'campaigns/id',
+            'campaigns/id-analytics',
+            'campaigns/id-emails',
+          ],
+        },
+      ],
     },
   ],
 };
