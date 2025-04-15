@@ -104,7 +104,7 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Créditos',
           collapsed: true,
-          items: ['loans/index'],
+          items: ['loans/index', 'loans/list'],
         },
         {
           type: 'category',
