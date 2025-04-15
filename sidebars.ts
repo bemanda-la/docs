@@ -1,4 +1,4 @@
-import type { SidebarsConfig } from "@docusaurus/plugin-content-docs";
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -18,31 +18,107 @@ const sidebars: SidebarsConfig = {
 
   // Grouping Webhooks
   guides: [
-    "intro",
-    "authentication/index",
     {
-      type: "category",
-      label: "Webhooks",
+      type: 'category',
+      label: 'Primeros Pasos',
       collapsed: false,
-      items: ["webhooks/index", "webhooks/handle-webhooks", "webhooks/events"],
+      items: [
+        'primerospasos/index',
+        'primerospasos/signup',
+        'primerospasos/login',
+        'primerospasos/app',
+      ],
     },
     {
-      type: "category",
-      label: "Usuarios",
+      type: 'category',
+      label: 'Navegación',
       collapsed: false,
-      items: ["users/index", "users/edit-admin"],
+      items: [
+        {
+          type: 'category',
+          label: 'Gestión',
+          collapsed: true,
+          items: [
+            'sections/admin/dashboard',
+            'sections/admin/usuarios',
+            'sections/admin/colaboradores',
+            'sections/admin/cuentas',
+            'sections/admin/creditos',
+            'sections/admin/suscripciones',
+            'sections/admin/cobranzas',
+            'sections/admin/campanas',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Setup',
+          collapsed: true,
+          items: [
+            {
+              type: 'category',
+              label: 'App',
+              collapsed: true,
+              items: [
+                'sections/setup/app/home',
+                'sections/setup/app/branding',
+                'sections/setup/app/navbar',
+              ],
+            },
+            'sections/setup/creditos',
+            'sections/setup/scoring',
+            'sections/setup/wallet',
+          ],
+        },
+      ],
     },
     {
-      type: "category",
-      label: "Préstamos",
+      type: 'category',
+      label: 'Documentacion APIs',
       collapsed: false,
-      items: ["loans/index", "loans/list-products", "loans/create-product-categories"],
-    },
-    {
-      type: "category",
-      label: "Comunicación",
-      collapsed: false,
-      items: ["campaigns/index", "campaigns/list", "campaigns/id", "campaigns/id-analytics", "campaigns/id-emails"],
+      items: [
+        'intro',
+        'modules',
+        {
+          type: 'category',
+          label: 'Autenticación',
+          collapsed: true,
+          items: ['authentication/index', 'authentication/auth_endpoints'],
+        },
+        {
+          type: 'category',
+          label: 'Webhooks',
+          collapsed: true,
+          items: [
+            'webhooks/index',
+            'webhooks/handle-webhooks',
+            'webhooks/events',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Usuarios',
+          collapsed: true,
+          items: ['users/index', 'users/users_endpoints'],
+        },
+        {
+          type: 'category',
+          label: 'Créditos',
+          collapsed: true,
+          items: ['loans/index'],
+        },
+        {
+          type: 'category',
+          label: 'Notificaciones',
+          collapsed: true,
+          items: [
+            'campaigns/index',
+            'campaigns/list',
+            'campaigns/id',
+            'campaigns/id-analytics',
+            'campaigns/id-emails',
+          ],
+        },
+      ],
     },
   ],
 };

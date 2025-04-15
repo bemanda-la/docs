@@ -1,4 +1,4 @@
-# Documentación de Eventos de Webhooks
+# Documentación de Eventos
 
 Esta sección detalla los eventos disponibles que puedes suscribirte mediante nuestros webhooks. Cada evento tiene un esquema específico para el cuerpo del mensaje enviado en la notificación.
 
@@ -8,7 +8,7 @@ Esta sección detalla los eventos disponibles que puedes suscribirte mediante nu
 
 **Descripción:** Este evento se dispara cuando se crea un nuevo usuario en la plataforma. Después de recibir este evento, se recomienda consultar la información del usuario en la API correspondiente:
 
-`GET /v1/user/:user_id`
+`GET /v1/users/:user_id`
 
 - **Nombre del evento:** `user.created`
 - **Ejemplo de payload:**
@@ -29,7 +29,7 @@ Esta sección detalla los eventos disponibles que puedes suscribirte mediante nu
 
 **Descripción:** Este evento se dispara cuando se modifica la información de un usuario existente. Después de recibir este evento, se recomienda consultar la información actualizada del usuario en la API correspondiente:
 
-`GET /v1/user/:user_id`
+`GET /v1/users/:user_id`
 
 - **Nombre del evento:** `user.updated`
 - **Ejemplo de payload:**

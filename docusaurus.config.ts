@@ -5,8 +5,8 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: "Manda Docs",
-  // tagline: "Dinosaurs are cool",
+  title: "Documentación de Manda | Guías y Tutoriales",
+  tagline: "Documentación oficial de la API y plataforma de Manda",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
@@ -66,31 +66,26 @@ const config: Config = {
   ],
 
   themeConfig: {
+    metadata: [
+      {name: 'keywords', content: 'manda, api, documentación, guías, tutoriales, préstamos, webhooks'},
+      {name: 'description', content: 'Documentación oficial de la API y plataforma de Manda. Guías, tutoriales y ejemplos de integración.'},
+      {name: 'og:title', content: 'Documentación de Manda | Guías y Tutoriales'},
+      {name: 'og:description', content: 'Documentación oficial de la API y plataforma de Manda. Guías, tutoriales y ejemplos de integración.'},
+      {name: 'og:type', content: 'website'},
+      {name: 'twitter:card', content: 'summary_large_image'},
+      {name: 'twitter:title', content: 'Documentación de Manda | Guías y Tutoriales'},
+      {name: 'twitter:description', content: 'Documentación oficial de la API y plataforma de Manda. Guías, tutoriales y ejemplos de integración.'},
+    ],
     // Replace with your project's social card
     image: "img/docusaurus-social-card.jpg",
     navbar: {
-      title: "Docs",
       logo: {
-        alt: "Manda Logo",
-        src: "img/logo.svg",
+        alt: 'Manda Logo',
+        src: 'img/logo.svg',
       },
-      items: [
-        {
-          type: "docSidebar",
-          sidebarId: "guides",
-          position: "left",
-          label: "Guías",
-        },
-        // { to: "/blog", label: "Blog", position: "left" },
-        // {
-        //   href: "https://github.com/facebook/docusaurus",
-        //   label: "GitHub",
-        //   position: "right",
-        // },
-      ],
     },
     footer: {
-      style: "dark",
+      style: 'dark',
       links: [
         // {
         //   title: "Docs",
@@ -137,6 +132,17 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+    },
+    docs: {
+      sidebar: {
+        hideable: true,
+        autoCollapseCategories: true,
+      },
+    },
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: false,
+      respectPrefersColorScheme: true,
     },
   } satisfies Preset.ThemeConfig,
 };
