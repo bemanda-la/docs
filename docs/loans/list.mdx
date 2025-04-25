@@ -1,0 +1,234 @@
+# Listado de Préstamos
+
+Esta guía detalla cómo consultar la información de un listado de préstamos, basada en el modelo definido.
+
+## Endpoint
+
+`GET /apps/loans`
+
+## Parámetros: Query Params
+
+- `page` (opcional): Número de la página que se desea consultar. Valor por defecto: `1`.
+- `items_per_page` (opcional): Cantidad de elementos por página. Valor por defecto: `5`.
+- `status` (opcional): Filtrar los préstamos por estado. Se pueden proporcionar múltiples estados como una lista separada por comas. Valores permitidos:
+  - `granted`: Préstamo otorgado
+  - `in_progress`: Préstamo en curso
+  - `pending`: Préstamo pendiente
+  - `rejected`: Préstamo rechazado
+  - `completed`: Préstamo completado
+  - `in_arrear`: Préstamo en mora
+  - `canceled`: Préstamo cancelado
+  - `loss`: Préstamo en pérdida
+  - `expired`: Préstamo expirado
+- `sort_by` (opcional): Ordenar los resultados por una propiedad específica. Formato: `<propiedad>=<"asc" o "desc">`. Ejemplo: `requested_date=asc`
+
+## Autenticación
+
+Este endpoint requiere autenticación mediante un token Bearer. Incluye el encabezado `Authorization` en tu solicitud:
+
+```
+Authorization: Bearer <tu_token>
+```
+
+Asegúrate de reemplazar `<tu_token>` con un token válido. Para obtener un token, consulta la guía de [autenticación](/docs/authentication/).
+
+## Ejemplos de Llamadas
+
+### Usando cURL
+
+```bash
+curl -X GET \
+  '{base_url}/apps/loans?page=1&items_per_page=5&status=expired,in_progress&sort_by=requested_date=asc' \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+### Usando Node.js
+
+```javascript
+const fetch = require('node-fetch');
+
+async function getLoans(token, params = {}) {
+  const queryParams = new URLSearchParams({
+    page: params.page || 1,
+    items_per_page: params.itemsPerPage || 5,
+    ...(params.status && { status: params.status }),
+    ...(params.sortBy && { sort_by: params.sortBy }),
+  }).toString();
+
+  const response = await fetch(`${base_url}/apps/loans?${queryParams}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching loans: ${response.statusText}`);
+  }
+
+  const loansData = await response.json();
+  console.log(loansData);
+}
+
+// Usage example
+const token = 'YOUR_ACCESS_TOKEN';
+const params = {
+  page: 1,
+  itemsPerPage: 5,
+  status: 'expired,in_progress',
+  sortBy: 'requested_date=asc',
+};
+getLoans(token, params).catch(console.error);
+```
+
+## Respuesta
+
+La respuesta incluye la estructura estándar para los recursos, con los siguientes elementos:
+
+### Estructura de Respuesta
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "user_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "application_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "product_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "currency_id": "ARS",
+      "requested_amount": "5000",
+      "interest_rate": "50",
+      "penalty_rate": "0",
+      "bonus_amount": "0",
+      "bonus_percentage": "0",
+      "total_amount": "5000",
+      "paid_amount": "1871.39",
+      "balance": "3128.61",
+      "installment_quantity": 2,
+      "requested_date": "2025-02-18T12:00:00.000Z",
+      "approved_date": null,
+      "credited_date": null,
+      "last_payment_date": "2025-03-24T03:00:00.000Z",
+      "fully_paid_date": null,
+      "status_id": "in_progress",
+      "other_info": null,
+      "product": {
+        "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "application_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "name": "Adelanto inmediato",
+        "primary_color": "#FFB95F",
+        "secondary_color": "#000000",
+        "description": "Adelanto inmediato",
+        "image_url": "https://example.com/image.jpg",
+        "slogan": "Get your loan now!",
+        "currency_id": "ars",
+        "category_id": "category1",
+        "status_id": "DISABLED",
+        "interest_rate_min": "1.5",
+        "interest_rate_max": "2",
+        "other_info": {
+          "additional_info": "Información adicional"
+        },
+        "workflow_id": null
+      },
+      "status": {
+        "id": "in_progress",
+        "name": "En curso",
+        "description": "El crédito está en curso"
+      },
+      "user_info": {
+        "first_name": "Usuario",
+        "last_name": "Ejemplo"
+      }
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "items_per_page": 50,
+    "total_items": 1,
+    "total_pages": 1
+  },
+  "error": null
+}
+```
+
+### Detalles de los Campos
+
+- **success:** Indica si la solicitud fue exitosa (`true` o `false`).
+- **data:** Lista de préstamos que coinciden con los criterios de búsqueda.
+- **error:** Contendrá detalles de errores en caso de que existan, incluyendo:
+  - **code:** Código del error.
+  - **message:** Mensaje general del error.
+  - **errors:** Lista de errores específicos, cada uno con:
+    - **message:** Descripción del error.
+    - **location:** Ubicación del error.
+- **pagination:** Información de paginación de la consulta:
+  - **page:** Página actual de los resultados.
+  - **items_per_page:** Número de elementos por página.
+  - **total_items:** Total de elementos disponibles.
+  - **total_pages:** Total de páginas disponibles.
+
+### Campos del Préstamo
+
+- **id:** Identificador único del préstamo.
+- **user_id:** Identificador único del usuario asociado al préstamo.
+- **application_id:** Identificador de la aplicación asociada.
+- **product_id:** Identificador del producto financiero asociado.
+- **currency_id:** Identificador de la moneda del préstamo.
+- **requested_amount:** Monto solicitado por el usuario.
+- **interest_rate:** Tasa de interés aplicada al préstamo.
+- **penalty_rate:** Tasa de penalización por incumplimiento.
+- **bonus_amount:** Monto del bono asociado al préstamo.
+- **bonus_percentage:** Porcentaje del bono sobre el préstamo.
+- **total_amount:** Monto total del préstamo, incluyendo intereses y bonos.
+- **paid_amount:** Monto pagado hasta el momento.
+- **balance:** Saldo pendiente del préstamo.
+- **installment_quantity:** Cantidad total de cuotas del préstamo.
+- **requested_date:** Fecha en la que se solicitó el préstamo.
+- **approved_date:** Fecha en la que se aprobó el préstamo.
+- **credited_date:** Fecha en la que se acreditaron los fondos.
+- **last_payment_date:** Fecha del último pago realizado.
+- **fully_paid_date:** Fecha en la que se completó el pago del préstamo (si aplica).
+- **status_id:** Identificador del estado actual del préstamo.
+- **other_info:** Información adicional del préstamo.
+
+### Relaciones
+
+#### Producto
+
+- **id:** Identificador único del producto.
+- **application_id:** Identificador de la aplicación asociada.
+- **name:** Nombre del producto.
+- **primary_color:** Color primario del producto.
+- **secondary_color:** Color secundario del producto.
+- **description:** Descripción del producto.
+- **image_url:** URL de la imagen del producto.
+- **slogan:** Eslogan del producto.
+- **currency_id:** Identificador de la moneda del producto.
+- **category_id:** Identificador de la categoría del producto.
+- **status_id:** Estado actual del producto.
+- **interest_rate_min:** Tasa de interés mínima del producto.
+- **interest_rate_max:** Tasa de interés máxima del producto.
+- **other_info:** Información adicional del producto.
+- **workflow_id:** Identificador del flujo de trabajo asociado.
+
+#### Estado
+
+- **id:** Identificador único del estado.
+- **name:** Nombre del estado.
+- **description:** Descripción del estado.
+
+#### Información del Usuario
+
+- **first_name:** Nombre del usuario.
+- **last_name:** Apellido del usuario.
+
+## Notas
+
+- El parámetro `status` es requerido y debe contener al menos un estado válido.
+- Los estados se pueden combinar usando comas para filtrar por múltiples estados.
+- La respuesta incluye información detallada del producto asociado a cada préstamo.
+- La paginación se aplica automáticamente con un tamaño de página predeterminado de 50 elementos.
